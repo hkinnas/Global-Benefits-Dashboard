@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adoption &middot; Cisco Global Benefits Dashboard</title>
+  <meta name="description" content="Adoption pillar - Optum EAP, Pulse, Wellthy, RethinkCare, Darwin, APJC preventive care." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <style>
+    /* ========================================================================
+       Cisco Global Benefits Dashboard - inline brand stylesheet.
+       Cisco Blue #00BCEB / Indigo #005073, Cisco Green / Yellow / Red status
+       palette, CiscoSans with Inter / system-sans fallback.
+       ====================================================================== */
+    :root {
+      --cisco-blue: #00bceb;
+      --cisco-blue-700: #049fd9;
+      --cisco-indigo: #005073;
+      --cisco-indigo-900: #00374f;
+      --cisco-black: #1d1d1d;
+      --cisco-gray-900: #39393b;
+      --cisco-gray-700: #58585b;
+      --cisco-gray-500: #6e6e73;
+      --cisco-gray-300: #c6c7ca;
+      --cisco-gray-200: #dedede;
+      --cisco-gray-100: #ebebeb;
+      --cisco-gray-50:  #f7f7f8;
+      --cisco-white: #ffffff;
+      --cisco-green: #6abf4b;
+      --cisco-green-dark: #4a8a35;
+      --cisco-green-bg: rgba(106, 191, 75, 0.12);
+      --cisco-yellow: #fbab18;
+      --cisco-yellow-dark: #b87b0a;
+      --cisco-yellow-bg: rgba(251, 171, 24, 0.14);
+      --cisco-red: #e2231a;
+      --cisco-red-dark: #a71811;
+      --cisco-red-bg: rgba(226, 35, 26, 0.10);
+      --cisco-info: var(--cisco-indigo);
+      --cisco-info-bg: rgba(0, 80, 115, 0.08);
+      --bg-page: #f7f8fa;
+      --bg-surface: #ffffff;
+      --bg-elevated: #ffffff;
+      --bg-soft: var(--cisco-gray-50);
+      --text-primary: var(--cisco-black);
+      --text-secondary: var(--cisco-gray-700);
+      --text-tertiary: var(--cisco-gray-500);
+      --text-quaternary: #98989c;
+      --stroke-strong: var(--cisco-gray-300);
+      --stroke-soft: var(--cisco-gray-200);
+      --stroke-faint: var(--cisco-gray-100);
+      --accent: var(--cisco-indigo);
+      --accent-soft: var(--cisco-info-bg);
+      --radius-xs: 3px; --radius-sm: 4px; --radius-md: 6px; --radius-lg: 10px;
+      --shadow-card: 0 1px 2px rgba(0, 55, 79, 0.05), 0 1px 3px rgba(0, 55, 79, 0.04);
+      --shadow-elevated: 0 4px 12px rgba(0, 55, 79, 0.08);
+      --font-sans: 'CiscoSans', 'CiscoSansTT', Inter, -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; background: var(--bg-page); color: var(--text-primary);
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.45;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--cisco-indigo); text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 120ms ease, color 120ms ease; }
+    a:hover { color: var(--cisco-blue-700); border-bottom-color: currentColor; }
+    p { margin: 0; }
+    ul { margin: 0; padding-left: 18px; }
+
+    .cisco-brandbar { background: var(--cisco-black); color: var(--cisco-white);
+                      border-bottom: 4px solid var(--cisco-blue); }
+    .cisco-brandbar-inner { max-width: 1320px; margin: 0 auto; padding: 14px 32px;
+                            display: flex; align-items: center; gap: 16px; }
+    .cisco-logo { font-family: var(--font-sans); font-weight: 700; font-size: 22px;
+                  letter-spacing: -0.01em; color: var(--cisco-white);
+                  display: inline-flex; align-items: center; gap: 10px; }
+    .cisco-logo-mark { width: 28px; height: 18px; display: inline-flex;
+                       align-items: flex-end; gap: 2px; }
+    .cisco-logo-mark span { display: inline-block; width: 3px;
+                            background: var(--cisco-blue); border-radius: 1px; }
+    .cisco-logo-mark span:nth-child(1) { height: 35%; }
+    .cisco-logo-mark span:nth-child(2) { height: 70%; }
+    .cisco-logo-mark span:nth-child(3) { height: 100%; }
+    .cisco-logo-mark span:nth-child(4) { height: 70%; }
+    .cisco-logo-mark span:nth-child(5) { height: 35%; }
+    .cisco-brand-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.25); }
+    .cisco-brand-title { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .cisco-brand-spacer { flex: 1 1 auto; }
+    .cisco-brand-meta { display: inline-flex; align-items: center; gap: 10px;
+                        font-size: 12px; color: rgba(255,255,255,0.7); }
+
+    .page-shell { max-width: 1320px; margin: 0 auto; padding: 28px 32px 80px; }
+    .page-header { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .page-title { font-size: 28px; font-weight: 700; line-height: 1.15;
+                  letter-spacing: -0.015em; color: var(--cisco-indigo); margin: 0; }
+    .page-subtitle { font-size: 14px; color: var(--text-secondary); margin: 0; }
+    .page-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+                 font-size: 12px; color: var(--text-tertiary); }
+
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--stroke-soft);
+            margin-bottom: 24px; flex-wrap: wrap; }
+    .tab { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
+           font-size: 14px; font-weight: 500; color: var(--text-secondary);
+           text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -2px;
+           transition: color 120ms ease, border-color 120ms ease, background 120ms ease; }
+    .tab:hover { color: var(--cisco-indigo); border-bottom: none; }
+    .tab.is-active { color: var(--cisco-indigo); border-bottom-color: var(--cisco-blue);
+                     font-weight: 600; }
+
+    .h1 { font-size: 24px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em;
+          color: var(--cisco-indigo); margin: 0; }
+    .h2 { font-size: 18px; font-weight: 600; line-height: 1.3; margin: 8px 0 0;
+          color: var(--text-primary); }
+    .h3 { font-size: 12px; font-weight: 600; text-transform: uppercase;
+          letter-spacing: 0.06em; color: var(--text-secondary); margin: 0; }
+    .text-secondary { color: var(--text-secondary); }
+    .text-tertiary  { color: var(--text-tertiary); }
+    .text-small     { font-size: 12px; }
+    .text-bold      { font-weight: 700; }
+    .text-semibold  { font-weight: 600; }
+
+    .stack { display: flex; flex-direction: column; }
+    .stack > * + * { margin-top: var(--gap, 16px); }
+    .stack.gap-6  { --gap: 6px; }
+    .stack.gap-8  { --gap: 8px; }
+    .stack.gap-12 { --gap: 12px; }
+    .stack.gap-16 { --gap: 16px; }
+    .stack.gap-20 { --gap: 20px; }
+    .stack.gap-24 { --gap: 24px; }
+    .row { display: flex; flex-direction: row; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .row.gap-6  { gap: 6px; } .row.gap-8  { gap: 8px; } .row.gap-12 { gap: 12px; }
+    .row.gap-16 { gap: 16px; } .row.gap-24 { gap: 24px; }
+    .spacer { flex: 1 1 auto; }
+    .grid { display: grid; gap: 12px; }
+    .grid.gap-16 { gap: 16px; }
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid.cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .grid.cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    @media (max-width: 1100px) {
+      .grid.cols-5, .grid.cols-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .grid.cols-2, .grid.cols-3, .grid.cols-4, .grid.cols-5, .grid.cols-6 { grid-template-columns: 1fr; }
+    }
+    .divider { height: 1px; background: var(--stroke-faint); border: 0; margin: 0; }
+
+    .stat { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+            border-left: 4px solid var(--cisco-indigo); border-radius: var(--radius-md);
+            padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
+            box-shadow: var(--shadow-card); }
+    .stat-value { font-size: 24px; font-weight: 700; line-height: 1.1;
+                  color: var(--text-primary); letter-spacing: -0.01em; }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
+                  letter-spacing: 0.06em; color: var(--text-secondary); line-height: 1.35; }
+    .stat[data-tone='success']  { border-left-color: var(--cisco-green); }
+    .stat[data-tone='success']  .stat-value { color: var(--cisco-green-dark); }
+    .stat[data-tone='warning']  { border-left-color: var(--cisco-yellow); }
+    .stat[data-tone='warning']  .stat-value { color: var(--cisco-yellow-dark); }
+    .stat[data-tone='danger']   { border-left-color: var(--cisco-red); }
+    .stat[data-tone='danger']   .stat-value { color: var(--cisco-red-dark); }
+    .stat[data-tone='info']     { border-left-color: var(--cisco-blue); }
+    .stat[data-tone='info']     .stat-value { color: var(--cisco-indigo); }
+
+    .card { background: var(--bg-elevated); border: 1px solid var(--stroke-soft);
+            border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-card); }
+    .card-header { padding: 10px 14px; font-size: 12px; font-weight: 700;
+                   text-transform: uppercase; letter-spacing: 0.05em;
+                   color: var(--cisco-indigo); background: var(--cisco-gray-50);
+                   border-bottom: 1px solid var(--stroke-faint); display: flex;
+                   align-items: center; justify-content: space-between; gap: 12px; }
+    .card-body { padding: 14px 16px; }
+
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px;
+            font-size: 11px; font-weight: 600; border-radius: 999px;
+            background: var(--cisco-gray-100); color: var(--cisco-gray-700);
+            border: 1px solid transparent; white-space: nowrap; letter-spacing: 0.02em; }
+    .pill.sm { padding: 1px 8px; font-size: 10px; }
+    .pill[data-tone='success'] { background: var(--cisco-green-bg);  color: var(--cisco-green-dark); }
+    .pill[data-tone='warning'] { background: var(--cisco-yellow-bg); color: var(--cisco-yellow-dark); }
+    .pill[data-tone='danger']  { background: var(--cisco-red-bg);    color: var(--cisco-red-dark); }
+    .pill[data-tone='info']    { background: var(--cisco-info-bg);   color: var(--cisco-indigo); }
+
+    .callout { border: 1px solid var(--stroke-soft); border-left-width: 4px;
+               border-radius: var(--radius-md); padding: 14px 16px; background: var(--bg-surface);
+               display: flex; flex-direction: column; gap: 6px; }
+    .callout-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; }
+    .callout-body { color: var(--text-secondary); }
+    .callout[data-tone='info']    { border-left-color: var(--cisco-blue);   background: var(--cisco-info-bg); }
+    .callout[data-tone='info']    .callout-title { color: var(--cisco-indigo); }
+    .callout[data-tone='success'] { border-left-color: var(--cisco-green);  background: var(--cisco-green-bg); }
+    .callout[data-tone='success'] .callout-title { color: var(--cisco-green-dark); }
+    .callout[data-tone='warning'] { border-left-color: var(--cisco-yellow); background: var(--cisco-yellow-bg); }
+    .callout[data-tone='warning'] .callout-title { color: var(--cisco-yellow-dark); }
+    .callout[data-tone='danger']  { border-left-color: var(--cisco-red);    background: var(--cisco-red-bg); }
+    .callout[data-tone='danger']  .callout-title { color: var(--cisco-red-dark); }
+
+    .table-wrap { border: 1px solid var(--stroke-soft); border-radius: var(--radius-md);
+                  overflow: auto; background: var(--bg-surface); }
+    table.cisco-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cisco-table thead { background: var(--cisco-gray-50); }
+    .cisco-table th { font-weight: 700; font-size: 11px; text-transform: uppercase;
+                      letter-spacing: 0.06em; color: var(--cisco-indigo); padding: 10px 12px;
+                      text-align: left; border-bottom: 1px solid var(--stroke-soft);
+                      white-space: nowrap; }
+    .cisco-table td { padding: 9px 12px; border-bottom: 1px solid var(--stroke-faint);
+                      vertical-align: top; }
+    .cisco-table tbody tr:last-child td { border-bottom: 0; }
+    .cisco-table.striped tbody tr:nth-child(even) { background: var(--cisco-gray-50); }
+    .cisco-table .num  { text-align: right; font-variant-numeric: tabular-nums; }
+    .cisco-table .right { text-align: right; }
+    .cisco-table .left  { text-align: left; }
+    .cisco-table tr[data-tone='success'] { background: var(--cisco-green-bg)  !important; }
+    .cisco-table tr[data-tone='warning'] { background: var(--cisco-yellow-bg) !important; }
+    .cisco-table tr[data-tone='danger']  { background: var(--cisco-red-bg)    !important; }
+    .cisco-table tr[data-tone='info']    { background: var(--cisco-info-bg)   !important; }
+
+    .chart-frame { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+                   border-radius: var(--radius-md); padding: 12px 14px; position: relative; }
+    .chart-frame .chart-canvas-wrap { position: relative; width: 100%; }
+    .chart-caption { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+    .footnote { font-size: 11.5px; color: var(--text-tertiary); line-height: 1.5; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .kpi-band { background: linear-gradient(135deg, var(--cisco-indigo-900) 0%, var(--cisco-indigo) 100%);
+                color: var(--cisco-white); border-radius: var(--radius-md); padding: 18px 24px;
+                display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .kpi-band .kpi-headline { font-size: 15px; font-weight: 500;
+                              color: rgba(255,255,255,0.85); max-width: 60%; }
+    .kpi-band .kpi-headline strong { color: var(--cisco-white); font-weight: 700; }
+    .kpi-band .kpi-headline em { font-style: normal; color: var(--cisco-blue); font-weight: 700; }
+
+    @media print {
+      .cisco-brandbar { background: var(--cisco-white); color: var(--cisco-black); }
+      .cisco-logo { color: var(--cisco-black); }
+      .tabs, .page-meta { display: none; }
+      .page-shell { padding: 0; }
+      .card, .stat, .callout, .chart-frame, .table-wrap { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cisco-brandbar" role="banner">
+    <div class="cisco-brandbar-inner">
+      <span class="cisco-logo" aria-label="Cisco">
+        <span class="cisco-logo-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+        cisco
+      </span>
+      <span class="cisco-brand-divider" aria-hidden="true"></span>
+      <span class="cisco-brand-title">Global Benefits Dashboard</span>
+      <span class="cisco-brand-spacer"></span>
+      <span class="cisco-brand-meta">
+        <span class="pill" data-tone="info">Phase 1 Prototype</span>
+        <span>YTD 2025 / Feb 2026 / Q1 FY26</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <h1 class="page-title">Adoption</h1>
+      <p class="page-subtitle">
+        Vendor utilization vs Cisco-HC denominators across Optum EAP, Optum Pulse, Wellthy,
+        RethinkCare, and Darwin. Per-EE rates use Cisco HC; vendor eligible HC is a footnote.
+      </p>
+      <div class="page-meta">
+        <span>Optum: Q4 2025 + Pulse Feb 2026</span>
+        <span>Wellthy: trailing 12mo Mar 2026</span>
+        <span>RethinkCare: Feb 2026</span>
+        <span>Darwin: Q2 FY26</span>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Dashboard tabs">
+      <a class="tab" href="index.html">Overview</a>
+      <a class="tab" href="financials.html">Financials</a>
+      <a class="tab is-active" href="adoption.html" aria-current="page">Adoption</a>
+      <a class="tab" href="experience.html">Experience</a>
+      <a class="tab" href="dictionary.html">Dictionary</a>
+    </nav>
+
+    <section class="stack gap-24">
+
+      <!-- Story tile --------------------------------------------------- -->
+      <div class="callout" data-tone="success">
+        <h3 class="callout-title">Story tile</h3>
+        <div class="callout-body">
+          Optum EAP utilization runs <strong>3.94%</strong> on a Cisco-HC denominator vs Optum
+          book-of-business <strong>2.5%</strong> &mdash; Cisco is
+          <strong>~58% above benchmark</strong>. EMEA leads at 6.4%, driven primarily by
+          Portugal's onsite-clinic-linked utilization (43% YTD, &gt;90% of EMEA cases).
+          Wellthy engagement is climbing (3.7% &rarr; 4.9% rolling 12mo) and RethinkCare
+          cumulative reach is 4.84% of Cisco HC after 7 months in market.
+        </div>
+      </div>
+
+      <!-- KPI band ----------------------------------------------------- -->
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="success">
+          <div class="stat-value">3.94%</div>
+          <div class="stat-label">Optum EAP utilization (Cisco HC)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">23.3%</div>
+          <div class="stat-label">Optum EAP engagement (Cisco HC)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">6.9%</div>
+          <div class="stat-label">Wellthy engagement rate</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">4.84%</div>
+          <div class="stat-label">RethinkCare cumulative reach</div>
+        </div>
+      </div>
+
+      <!-- Optum EAP by region ----------------------------------------- -->
+      <h2 class="h2">Optum EAP &mdash; utilization by region (YTD 2025, annualized)</h2>
+      <p class="text-small text-secondary">
+        Optum's "AMERICAS" scope is Canada-only. The US is served by a separate UBH/Optum US
+        program that is in financials but not in this engagement feed. "Cisco recomputed" uses
+        the May 2026 Cisco HC as the denominator instead of the vendor's smaller eligible base.
+      </p>
+      <div class="chart-frame">
+        <div class="chart-canvas-wrap" style="height:300px;">
+          <canvas id="chart-optum-region"></canvas>
+        </div>
+      </div>
+
+      <div class="grid cols-5 gap-16">
+        <div class="card">
+          <div class="card-header">Global (non-US) <span class="pill sm" data-tone="success">+1.3pp vs BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">1,800</span>
+            <span class="text-small text-tertiary">Vendor util</span><span>3.82%</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">3.94%</span>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">vendor HC: 47,137</span>
+            <span class="text-small text-tertiary">Cisco HC: 45,676</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Canada <span class="pill sm" data-tone="warning">-0.9pp vs BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">41</span>
+            <span class="text-small text-tertiary">Vendor util</span><span>1.57%</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">1.63%</span>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">vendor HC: 2,610</span>
+            <span class="text-small text-tertiary">Cisco HC: 2,512</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">APJC <span class="pill sm" data-tone="warning">-0.3pp vs BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">543</span>
+            <span class="text-small text-tertiary">Vendor util</span><span>2.25%</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">2.30%</span>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">vendor HC: 24,092</span>
+            <span class="text-small text-tertiary">Cisco HC: 23,595</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">EMEA <span class="pill sm" data-tone="success">+3.6pp vs BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">1,011</span>
+            <span class="text-small text-tertiary">Vendor util</span><span>6.11%</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">6.42%</span>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">vendor HC: 16,560</span>
+            <span class="text-small text-tertiary">Cisco HC: 15,738</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">LATAM <span class="pill sm" data-tone="success">+2.8pp vs BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">205</span>
+            <span class="text-small text-tertiary">Vendor util</span><span>5.29%</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">5.35%</span>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">vendor HC: 3,875</span>
+            <span class="text-small text-tertiary">Cisco HC: 3,831</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optum quarterly --------------------------------------------- -->
+      <h2 class="h2">Optum quarterly utilization trend (annualized, all regions)</h2>
+      <div class="chart-frame">
+        <div class="chart-canvas-wrap" style="height:240px;">
+          <canvas id="chart-optum-quarterly"></canvas>
+        </div>
+      </div>
+      <div class="callout" data-tone="warning">
+        <h3 class="callout-title">Trend alert</h3>
+        <div class="callout-body">
+          Quarterly annualized utilization has trended down across 2025 (4.6% &rarr; 2.9%).
+          YTD blended rate of 3.8% remains above benchmark, but Q4 2025 alone is the lowest of
+          the trailing 8 quarters &mdash; worth a Q1 2026 follow-up to confirm whether this is
+          seasonal or a real decline in help-seeking behavior.
+        </div>
+      </div>
+
+      <!-- Optum Pulse Feb 2026 ---------------------------------------- -->
+      <h2 class="h2">Optum Pulse monthly trend (Feb 2025 &rarr; Feb 2026)</h2>
+      <p class="text-small text-secondary">
+        Higher-resolution monthly read replaces the lower-resolution quarterly view above. The
+        Q1 2026 follow-up flagged in the trend alert is now live: Jan 2026 = 4.7%,
+        Feb 2026 = 3.7% monthly &mdash; running materially above book-of-business in both months.
+      </p>
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="success">
+          <div class="stat-value">3.7%</div>
+          <div class="stat-label">Feb 2026 monthly utilization</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">3.9%</div>
+          <div class="stat-label">YTD utilization (294 cases)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">16.6%</div>
+          <div class="stat-label">YTD engagement (1,238 engagements)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">884</div>
+          <div class="stat-label">YTD Livewell web sessions</div>
+        </div>
+      </div>
+      <div class="chart-frame">
+        <div class="chart-canvas-wrap" style="height:260px;">
+          <canvas id="chart-pulse-monthly"></canvas>
+        </div>
+      </div>
+      <div class="callout" data-tone="info">
+        <h3 class="callout-title">Top presenting issues (Feb 2026)</h3>
+        <div class="callout-body">
+          Anxious/Worry, Couple/Primary relationship, Taxation. Taxation entering the global
+          top-3 mirrors the EMEA + LATAM regional top issues seen on the Experience tab
+          &mdash; consistent demand signal for personal-finance support.
+        </div>
+      </div>
+
+      <h3 class="h3">Top countries by Pulse utilization (YTD Feb 2026)</h3>
+      <p class="text-small text-secondary">
+        Country-level utilization vs the country-specific Optum book-of-business benchmark.
+        Portugal 38%, Norway 16%, Australia 12%, and Israel 7% all run multiples above benchmark.
+      </p>
+      <div class="table-wrap">
+        <table class="cisco-table striped">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th class="right">YTD cases</th>
+              <th class="right">Cisco util %</th>
+              <th class="right">BoB util %</th>
+              <th class="right">vs BoB</th>
+            </tr>
+          </thead>
+          <tbody id="pulse-table-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Darwin Q2 FY26 ---------------------------------------------- -->
+      <h2 class="h2">Darwin (EMEA benefits portal) &mdash; Q2 FY26 reach</h2>
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="success">
+          <div class="stat-value">9,110</div>
+          <div class="stat-label">Unique logins (of 18,070 total)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">3,446</div>
+          <div class="stat-label">Benefit selections (of 13,661 HC)</div>
+        </div>
+        <div class="stat" data-tone="success">
+          <div class="stat-value">100.00%</div>
+          <div class="stat-label">Darwin availability (Jan 2026)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">0.83s</div>
+          <div class="stat-label">Avg page load time</div>
+        </div>
+      </div>
+      <div class="chart-frame">
+        <div class="text-small text-secondary" style="margin-bottom:6px;">
+          Login % by country (Darwin Q2 FY26 unique-login rate)
+        </div>
+        <div class="chart-canvas-wrap" style="height:380px;">
+          <canvas id="chart-darwin-login"></canvas>
+        </div>
+      </div>
+      <p class="footnote">
+        Source: Cisco Quarterly Business Update 2026 Q2 (MMB), Darwin section. UK and Ireland
+        helpdesk tickets resolved at 96.99% / 100% SLA; admin scheduled tasks at 99.9% (target 90%).
+      </p>
+
+      <!-- Wellthy ----------------------------------------------------- -->
+      <h2 class="h2">Wellthy &mdash; engagement growth (annual 2025 vs trailing 12mo Mar 2026)</h2>
+      <div class="grid cols-2 gap-16">
+        <div class="card">
+          <div class="card-header">Annual 2025 (Jan-Dec)</div>
+          <div class="card-body stack gap-12">
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Engaged lives</div><div class="text-semibold">3,170</div></div>
+              <div><div class="text-small text-tertiary">Sponsored pop</div><div class="text-semibold">51,553</div></div>
+              <div><div class="text-small text-tertiary">Engagement %</div><div class="text-semibold">6.1%</div></div>
+            </div>
+            <hr class="divider" />
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Active care projects</div><div class="text-semibold">611</div></div>
+              <div><div class="text-small text-tertiary">Project months</div><div class="text-semibold">1,665</div></div>
+              <div><div class="text-small text-tertiary">Concierge util</div><div class="text-semibold">1.19%</div></div>
+            </div>
+            <hr class="divider" />
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Hours saved (US)</div><div class="text-semibold">18,162</div></div>
+              <div><div class="text-small text-tertiary">Tasks completed</div><div class="text-semibold">1,112</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Trailing 12mo (Apr 2025 - Mar 2026)</div>
+          <div class="card-body stack gap-12">
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Engaged lives</div><div class="text-semibold">4,209</div></div>
+              <div><div class="text-small text-tertiary">Sponsored pop</div><div class="text-semibold">61,328</div></div>
+              <div><div class="text-small text-tertiary">Engagement %</div><div class="text-semibold">6.9%</div></div>
+            </div>
+            <hr class="divider" />
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Active care projects</div><div class="text-semibold">816</div></div>
+              <div><div class="text-small text-tertiary">Project months</div><div class="text-semibold">1,983</div></div>
+              <div><div class="text-small text-tertiary">Concierge util</div><div class="text-semibold">1.33%</div></div>
+            </div>
+            <hr class="divider" />
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Hours saved (US)</div><div class="text-semibold">20,248</div></div>
+              <div><div class="text-small text-tertiary">Tasks completed</div><div class="text-semibold">1,224</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="h3">March 2026 monthly snapshot</h3>
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="warning">
+          <div class="stat-value">183</div>
+          <div class="stat-label">New sign-ups (vs 860 Feb)</div>
+        </div>
+        <div class="stat" data-tone="success">
+          <div class="stat-value">305</div>
+          <div class="stat-label">New care projects (vs 249 Feb)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">634</div>
+          <div class="stat-label">Supported tasks</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">673</div>
+          <div class="stat-label">Lives impacted (month)</div>
+        </div>
+      </div>
+
+      <!-- RethinkCare ------------------------------------------------- -->
+      <h2 class="h2">RethinkCare &mdash; cumulative enrollment by region (Feb 2026)</h2>
+      <div class="grid cols-5 gap-16">
+        <div class="card">
+          <div class="card-header">US <span class="pill sm" data-tone="info">+192 since Aug</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cumulative enrolled</span><span class="text-semibold">2,207</span>
+            <span class="text-small text-tertiary">Cisco HC penetration</span><span class="text-semibold">5.52%</span>
+            <span class="text-small text-tertiary">of 39,963 EE</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Canada <span class="pill sm" data-tone="info">+35 since Aug</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cumulative enrolled</span><span class="text-semibold">196</span>
+            <span class="text-small text-tertiary">Cisco HC penetration</span><span class="text-semibold">7.80%</span>
+            <span class="text-small text-tertiary">of 2,512 EE</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">APJC <span class="pill sm" data-tone="info">+141 since Aug</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cumulative enrolled</span><span class="text-semibold">1,009</span>
+            <span class="text-small text-tertiary">Cisco HC penetration</span><span class="text-semibold">4.28%</span>
+            <span class="text-small text-tertiary">of 23,595 EE</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">EMEA <span class="pill sm" data-tone="info">+180 since Aug</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cumulative enrolled</span><span class="text-semibold">676</span>
+            <span class="text-small text-tertiary">Cisco HC penetration</span><span class="text-semibold">4.30%</span>
+            <span class="text-small text-tertiary">of 15,738 EE</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">LATAM <span class="pill sm" data-tone="info">+43 since Aug</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cumulative enrolled</span><span class="text-semibold">215</span>
+            <span class="text-small text-tertiary">Cisco HC penetration</span><span class="text-semibold">5.61%</span>
+            <span class="text-small text-tertiary">of 3,831 EE</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="h3">Cumulative enrollment growth (global)</h3>
+      <div class="chart-frame">
+        <div class="chart-canvas-wrap" style="height:240px;">
+          <canvas id="chart-rethink-growth"></canvas>
+        </div>
+      </div>
+
+      <h3 class="h3">Top countries by Cisco-HC penetration</h3>
+      <div class="table-wrap">
+        <table class="cisco-table">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Region</th>
+              <th class="right">Cisco HC</th>
+              <th class="right">Enrolled (Feb 2026)</th>
+              <th class="right">Penetration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>New Zealand</td><td>APJC</td><td class="num">56</td><td class="num">10</td><td class="num">17.9%</td></tr>
+            <tr><td>Costa Rica</td><td>LATAM</td><td class="num">483</td><td class="num">31</td><td class="num">6.4%</td></tr>
+            <tr><td>United Kingdom</td><td>EMEA</td><td class="num">3,248</td><td class="num">203</td><td class="num">6.3%</td></tr>
+            <tr><td>Canada</td><td>Canada</td><td class="num">2,512</td><td class="num">196</td><td class="num">7.8%</td></tr>
+            <tr><td>Australia</td><td>APJC</td><td class="num">1,542</td><td class="num">96</td><td class="num">6.2%</td></tr>
+            <tr><td>Mexico</td><td>LATAM</td><td class="num">2,625</td><td class="num">145</td><td class="num">5.5%</td></tr>
+            <tr><td>United States</td><td>US</td><td class="num">39,963</td><td class="num">2,207</td><td class="num">5.5%</td></tr>
+            <tr><td>Poland</td><td>EMEA</td><td class="num">2,535</td><td class="num">128</td><td class="num">5.0%</td></tr>
+            <tr><td>Germany</td><td>EMEA</td><td class="num">1,255</td><td class="num">33</td><td class="num">2.6%</td></tr>
+            <tr><td>India</td><td>APJC</td><td class="num">15,898</td><td class="num">561</td><td class="num">3.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- APJC preventive care ---------------------------------------- -->
+      <h2 class="h2">APJC preventive care (FY25)</h2>
+      <p class="text-small text-secondary">
+        New country-team feed: per-country health checkup and vaccination participation across
+        the 14 APJC markets. India is the only country where insurance claim ratio is reportable
+        due to local data privacy regulations.
+      </p>
+      <div class="grid cols-3 gap-16">
+        <div class="stat">
+          <div class="stat-value">11,940</div>
+          <div class="stat-label">India insurance claimants (FY25)</div>
+        </div>
+        <div class="stat" data-tone="info">
+          <div class="stat-value">74%</div>
+          <div class="stat-label">India claim ratio (claimants / HC)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">7/14</div>
+          <div class="stat-label">APJC countries with &ge;50% checkup participation</div>
+        </div>
+      </div>
+      <div class="chart-frame">
+        <div class="chart-canvas-wrap" style="height:480px;">
+          <canvas id="chart-apjc-prev"></canvas>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="cisco-table striped">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Sub-region</th>
+              <th class="right">Cisco HC</th>
+              <th class="right">Checkup #</th>
+              <th class="right">Checkup %</th>
+              <th>Checkup grade</th>
+              <th class="right">Vaccination #</th>
+              <th class="right">Vaccination %</th>
+              <th>Vaccination grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Australia</td><td>ANZ</td><td class="num">1,542</td><td class="num">81</td><td class="num">6.2%</td><td>N/A (Funded by insurer)</td><td class="num">250</td><td class="num">19.1%</td><td>N/A (Funded by insurer)</td></tr>
+            <tr><td>New Zealand</td><td>ANZ</td><td class="num">56</td><td class="num">0</td><td class="num">0%</td><td>N/A (Funded by insurer)</td><td class="num">7</td><td class="num">12.3%</td><td>N/A (Funded by insurer)</td></tr>
+            <tr><td>China</td><td>GC</td><td class="num">2,448</td><td class="num">1,936</td><td class="num">77%</td><td>Align</td><td class="num">103</td><td class="num">4%</td><td>Align</td></tr>
+            <tr><td>Hong Kong</td><td>GC</td><td class="num">171</td><td class="num">70</td><td class="num">44%</td><td>Above</td><td class="num">27</td><td class="num">16%</td><td>Above</td></tr>
+            <tr><td>Taiwan</td><td>GC</td><td class="num">267</td><td class="num">162</td><td class="num">65%</td><td>Above</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td>N/A (Not offered)</td></tr>
+            <tr><td>India</td><td>India</td><td class="num">15,898</td><td class="num">5,186</td><td class="num">32.2%</td><td>Align</td><td class="num">243</td><td class="num">1.5%</td><td>Align</td></tr>
+            <tr><td>Japan</td><td>Japan</td><td class="num">1,453</td><td class="num">860</td><td class="num">69%</td><td>Align</td><td class="num">906</td><td class="num">72.7%</td><td>N/A (No benchmark)</td></tr>
+            <tr><td>Korea, Republic of</td><td>Korea</td><td class="num">297</td><td class="num">295</td><td class="num">100%</td><td>N/A (Statutory benefit)</td><td class="num">137</td><td class="num">46.4%</td><td>N/A (Statutory benefit)</td></tr>
+            <tr><td>Singapore</td><td>ASEAN</td><td class="num">702</td><td class="num">99</td><td class="num">15.4%</td><td>N/A (Falls under FSA)</td><td class="num">93</td><td class="num">14.5%</td><td>Below</td></tr>
+            <tr><td>Malaysia</td><td>ASEAN</td><td class="num">257</td><td class="num">114</td><td class="num">44%</td><td>Align</td><td class="num">14</td><td class="num">5.4%</td><td>N/A (Grouped w/ Outpatient)</td></tr>
+            <tr><td>Indonesia</td><td>ASEAN</td><td class="num">125</td><td class="num">23</td><td class="num">18.7%</td><td>N/A (Grouped w/ Outpatient)</td><td class="num">8</td><td class="num">6.5%</td><td>N/A (Grouped w/ Outpatient)</td></tr>
+            <tr><td>Vietnam</td><td>ASEAN</td><td class="num">86</td><td class="num">35</td><td class="num">47.3%</td><td>Above</td><td class="num">23</td><td class="num">31.1%</td><td>Above</td></tr>
+            <tr><td>Thailand</td><td>ASEAN</td><td class="num">166</td><td class="num">67</td><td class="num">39%</td><td>Above</td><td class="num">83</td><td class="num">48.3%</td><td>Above</td></tr>
+            <tr><td>Philippines</td><td>ASEAN</td><td class="num">96</td><td class="num">55</td><td class="num">47.8%</td><td>Align</td><td class="num">2</td><td class="num">1.7%</td><td>Align</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">
+        Source: APJC Measurement &amp; Metrics data collection_Preventive Health.xlsx and
+        _Insurance.xlsx. Korea checkup 100% reflects statutory benefit; Singapore is the only
+        Below grade for vaccination.
+      </p>
+
+      <!-- Reconciliation ---------------------------------------------- -->
+      <h2 class="h2">Reconciliation policy</h2>
+      <p>
+        Every per-EE adoption metric on this tab divides by the Cisco regional HC from the
+        May 2026 snapshot, not the vendor's self-reported eligible base. The vendor number is
+        preserved as a footnote so anyone comparing this dashboard to the underlying QBR can
+        see the variance &mdash; usually small (Optum runs ~3-4% lower HC because of
+        point-in-time vs. May snapshot). Wellthy and RethinkCare run materially smaller
+        eligible bases (~60% and ~5% of full HC respectively) by program design, which the
+        variance footnote makes explicit. The APJC country-team mart (preventive care above,
+        well-being and time-off on the Experience tab) is rendered
+        <strong>side-by-side</strong> with vendor data &mdash; it is a different system of
+        record (country HR teams) and is not double-counted in headline KPIs.
+      </p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
+  <script src="assets/charts.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // Optum by region
+      var OPTUM_REGIONS = [
+        { name: 'Global (non-US)', vendor: 3.82, cisco: 3.94, bob: 2.50 },
+        { name: 'Canada',          vendor: 1.57, cisco: 1.63, bob: 2.50 },
+        { name: 'APJC',            vendor: 2.25, cisco: 2.30, bob: 2.50 },
+        { name: 'EMEA',            vendor: 6.11, cisco: 6.42, bob: 2.50 },
+        { name: 'LATAM',           vendor: 5.29, cisco: 5.35, bob: 2.50 }
+      ];
+
+      CiscoChart.bar(
+        'chart-optum-region',
+        OPTUM_REGIONS.map(function (r) { return r.name; }),
+        [
+          { name: 'Vendor-reported util',  data: OPTUM_REGIONS.map(function (r) { return r.vendor; }), tone: 'neutral' },
+          { name: 'Cisco-recomputed util', data: OPTUM_REGIONS.map(function (r) { return r.cisco;  }), tone: 'primary' },
+          { name: 'Optum BoB benchmark',   data: OPTUM_REGIONS.map(function (r) { return r.bob;    }), tone: 'warning' }
+        ],
+        { valueFormat: 'percent', height: 300 }
+      );
+
+      // Optum quarterly trend
+      CiscoChart.bar(
+        'chart-optum-quarterly',
+        ['24 Q1', '24 Q2', '24 Q3', '24 Q4', '25 Q1', '25 Q2', '25 Q3', '25 Q4'],
+        [{ name: 'Annualized utilization', data: [4.1, 5.6, 4.3, 3.9, 4.6, 4.5, 3.7, 2.9], tone: 'primary' }],
+        { valueFormat: 'percent', height: 240, legend: false }
+      );
+
+      // Pulse monthly
+      var PULSE = [
+        { m: 'Feb 25', util: 3.8, bob: 2.0 }, { m: 'Mar 25', util: 3.7, bob: 2.8 },
+        { m: 'Apr 25', util: 2.7, bob: 2.8 }, { m: 'May 25', util: 3.7, bob: 2.7 },
+        { m: 'Jun 25', util: 5.1, bob: 2.7 }, { m: 'Jul 25', util: 4.2, bob: 2.9 },
+        { m: 'Aug 25', util: 4.2, bob: 2.7 }, { m: 'Sep 25', util: 3.6, bob: 3.0 },
+        { m: 'Oct 25', util: 2.8, bob: 3.0 }, { m: 'Nov 25', util: 4.3, bob: 3.2 },
+        { m: 'Dec 25', util: 3.3, bob: 3.1 }, { m: 'Jan 26', util: 4.7, bob: 2.4 },
+        { m: 'Feb 26', util: 4.5, bob: 3.1 }
+      ];
+      CiscoChart.bar(
+        'chart-pulse-monthly',
+        PULSE.map(function (p) { return p.m; }),
+        [
+          { name: 'Cisco utilization', data: PULSE.map(function (p) { return p.util; }), tone: 'primary' },
+          { name: 'BoB benchmark',     data: PULSE.map(function (p) { return p.bob;  }), tone: 'warning' }
+        ],
+        { valueFormat: 'percent', height: 260 }
+      );
+
+      // Pulse top countries
+      var PULSE_TOP = [
+        ['Portugal',       61, 38.2, 4.2],
+        ['India',          49,  1.9, 1.2],
+        ['Australia',      29, 11.6, 2.9],
+        ['China',          19,  4.8, 0.8],
+        ['United Kingdom', 17,  3.2, 3.8],
+        ['Mexico',         13,  3.0, 2.5],
+        ['Norway',         13, 16.2, 7.9],
+        ['Canada',         10,  2.4, 1.9],
+        ['Israel',          9,  7.0, 3.5],
+        ['Poland',          8,  1.9, 1.6],
+        ['Spain',           6,  7.3, 0.7]
+      ];
+      var tbody = document.getElementById('pulse-table-body');
+      PULSE_TOP.forEach(function (row) {
+        var tr = document.createElement('tr');
+        var delta = row[2] - row[3];
+        if (delta >= 5) tr.setAttribute('data-tone', 'success');
+        else if (delta < 0) tr.setAttribute('data-tone', 'warning');
+        tr.innerHTML =
+          '<td>' + row[0] + '</td>' +
+          '<td class="num">' + row[1].toLocaleString() + '</td>' +
+          '<td class="num">' + row[2].toFixed(1) + '%</td>' +
+          '<td class="num">' + row[3].toFixed(1) + '%</td>' +
+          '<td class="num">' + (delta >= 0 ? '+' : '') + delta.toFixed(1) + 'pp</td>';
+        tbody.appendChild(tr);
+      });
+
+      // Darwin login %
+      var DARWIN = [
+        ['United Kingdom', 75.77], ['Ireland',     72.91], ['Israel',      69.36],
+        ['Germany',        61.53], ['Portugal',    55.81], ['Italy',       36.05],
+        ['Flex',           34.38], ['Spain',       28.80], ['Norway',      27.87],
+        ['Poland',         20.00], ['South Africa',13.60], ['Netherlands', 10.18],
+        ['France',          9.91], ['Belgium',      1.70]
+      ];
+      CiscoChart.bar(
+        'chart-darwin-login',
+        DARWIN.map(function (d) { return d[0]; }),
+        [{ name: 'Login %', data: DARWIN.map(function (d) { return d[1]; }), tone: 'info' }],
+        { horizontal: true, valueFormat: 'percent', height: 380, legend: false }
+      );
+
+      // RethinkCare growth
+      CiscoChart.bar(
+        'chart-rethink-growth',
+        ['Aug 2025', 'Sep 2025', 'Oct 2025', 'Nov 2025', 'Dec 2025', 'Jan 2026', 'Feb 2026'],
+        [{ name: 'Enrolled employees + care team', data: [3722, 3785, 3889, 3953, 3992, 4056, 4145], tone: 'primary' }],
+        { height: 240, legend: false }
+      );
+
+      // APJC preventive
+      var APJC_PREV = [
+        ['Australia',           6.2, 19.1],
+        ['New Zealand',           0, 12.3],
+        ['China',                77,    4],
+        ['Hong Kong',            44,   16],
+        ['Taiwan',               65,    0],
+        ['India',              32.2,  1.5],
+        ['Japan',                69, 72.7],
+        ['Korea, Republic of',  100, 46.4],
+        ['Singapore',          15.4, 14.5],
+        ['Malaysia',             44,  5.4],
+        ['Indonesia',          18.7,  6.5],
+        ['Vietnam',            47.3, 31.1],
+        ['Thailand',             39, 48.3],
+        ['Philippines',        47.8,  1.7]
+      ];
+      CiscoChart.bar(
+        'chart-apjc-prev',
+        APJC_PREV.map(function (a) { return a[0]; }),
+        [
+          { name: 'Health checkup %', data: APJC_PREV.map(function (a) { return a[1]; }), tone: 'success' },
+          { name: 'Vaccination %',    data: APJC_PREV.map(function (a) { return a[2]; }), tone: 'info' }
+        ],
+        { horizontal: true, valueFormat: 'percent', height: 480 }
+      );
+    })();
+  </script>
+</body>
+</html>

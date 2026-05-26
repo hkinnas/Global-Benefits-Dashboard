@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cisco Global Benefits Dashboard</title>
+  <meta name="description" content="Cisco Global Benefits Dashboard - Phase 1 prototype." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <style>
+    /* ========================================================================
+       Cisco Global Benefits Dashboard - inline brand stylesheet.
+       Cisco Blue #00BCEB / Indigo #005073, Cisco Green / Yellow / Red status
+       palette, CiscoSans with Inter / system-sans fallback.
+       ====================================================================== */
+    :root {
+      --cisco-blue: #00bceb;
+      --cisco-blue-700: #049fd9;
+      --cisco-indigo: #005073;
+      --cisco-indigo-900: #00374f;
+      --cisco-black: #1d1d1d;
+      --cisco-gray-900: #39393b;
+      --cisco-gray-700: #58585b;
+      --cisco-gray-500: #6e6e73;
+      --cisco-gray-300: #c6c7ca;
+      --cisco-gray-200: #dedede;
+      --cisco-gray-100: #ebebeb;
+      --cisco-gray-50:  #f7f7f8;
+      --cisco-white: #ffffff;
+      --cisco-green: #6abf4b;
+      --cisco-green-dark: #4a8a35;
+      --cisco-green-bg: rgba(106, 191, 75, 0.12);
+      --cisco-yellow: #fbab18;
+      --cisco-yellow-dark: #b87b0a;
+      --cisco-yellow-bg: rgba(251, 171, 24, 0.14);
+      --cisco-red: #e2231a;
+      --cisco-red-dark: #a71811;
+      --cisco-red-bg: rgba(226, 35, 26, 0.10);
+      --cisco-info: var(--cisco-indigo);
+      --cisco-info-bg: rgba(0, 80, 115, 0.08);
+      --bg-page: #f7f8fa;
+      --bg-surface: #ffffff;
+      --bg-elevated: #ffffff;
+      --bg-soft: var(--cisco-gray-50);
+      --text-primary: var(--cisco-black);
+      --text-secondary: var(--cisco-gray-700);
+      --text-tertiary: var(--cisco-gray-500);
+      --text-quaternary: #98989c;
+      --stroke-strong: var(--cisco-gray-300);
+      --stroke-soft: var(--cisco-gray-200);
+      --stroke-faint: var(--cisco-gray-100);
+      --accent: var(--cisco-indigo);
+      --accent-soft: var(--cisco-info-bg);
+      --radius-xs: 3px; --radius-sm: 4px; --radius-md: 6px; --radius-lg: 10px;
+      --shadow-card: 0 1px 2px rgba(0, 55, 79, 0.05), 0 1px 3px rgba(0, 55, 79, 0.04);
+      --shadow-elevated: 0 4px 12px rgba(0, 55, 79, 0.08);
+      --font-sans: 'CiscoSans', 'CiscoSansTT', Inter, -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; background: var(--bg-page); color: var(--text-primary);
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.45;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--cisco-indigo); text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 120ms ease, color 120ms ease; }
+    a:hover { color: var(--cisco-blue-700); border-bottom-color: currentColor; }
+    p { margin: 0; }
+    ul { margin: 0; padding-left: 18px; }
+
+    .cisco-brandbar { background: var(--cisco-black); color: var(--cisco-white);
+                      border-bottom: 4px solid var(--cisco-blue); }
+    .cisco-brandbar-inner { max-width: 1320px; margin: 0 auto; padding: 14px 32px;
+                            display: flex; align-items: center; gap: 16px; }
+    .cisco-logo { font-family: var(--font-sans); font-weight: 700; font-size: 22px;
+                  letter-spacing: -0.01em; color: var(--cisco-white);
+                  display: inline-flex; align-items: center; gap: 10px; }
+    .cisco-logo-mark { width: 28px; height: 18px; display: inline-flex;
+                       align-items: flex-end; gap: 2px; }
+    .cisco-logo-mark span { display: inline-block; width: 3px;
+                            background: var(--cisco-blue); border-radius: 1px; }
+    .cisco-logo-mark span:nth-child(1) { height: 35%; }
+    .cisco-logo-mark span:nth-child(2) { height: 70%; }
+    .cisco-logo-mark span:nth-child(3) { height: 100%; }
+    .cisco-logo-mark span:nth-child(4) { height: 70%; }
+    .cisco-logo-mark span:nth-child(5) { height: 35%; }
+    .cisco-brand-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.25); }
+    .cisco-brand-title { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .cisco-brand-spacer { flex: 1 1 auto; }
+    .cisco-brand-meta { display: inline-flex; align-items: center; gap: 10px;
+                        font-size: 12px; color: rgba(255,255,255,0.7); }
+
+    .page-shell { max-width: 1320px; margin: 0 auto; padding: 28px 32px 80px; }
+    .page-header { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .page-title { font-size: 28px; font-weight: 700; line-height: 1.15;
+                  letter-spacing: -0.015em; color: var(--cisco-indigo); margin: 0; }
+    .page-subtitle { font-size: 14px; color: var(--text-secondary); margin: 0; }
+    .page-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+                 font-size: 12px; color: var(--text-tertiary); }
+
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--stroke-soft);
+            margin-bottom: 24px; flex-wrap: wrap; }
+    .tab { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
+           font-size: 14px; font-weight: 500; color: var(--text-secondary);
+           text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -2px;
+           transition: color 120ms ease, border-color 120ms ease, background 120ms ease; }
+    .tab:hover { color: var(--cisco-indigo); border-bottom: none; }
+    .tab.is-active { color: var(--cisco-indigo); border-bottom-color: var(--cisco-blue);
+                     font-weight: 600; }
+
+    .h1 { font-size: 24px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em;
+          color: var(--cisco-indigo); margin: 0; }
+    .h2 { font-size: 18px; font-weight: 600; line-height: 1.3; margin: 8px 0 0;
+          color: var(--text-primary); }
+    .h3 { font-size: 12px; font-weight: 600; text-transform: uppercase;
+          letter-spacing: 0.06em; color: var(--text-secondary); margin: 0; }
+    .text-secondary { color: var(--text-secondary); }
+    .text-tertiary  { color: var(--text-tertiary); }
+    .text-small     { font-size: 12px; }
+    .text-bold      { font-weight: 700; }
+    .text-semibold  { font-weight: 600; }
+
+    .stack { display: flex; flex-direction: column; }
+    .stack > * + * { margin-top: var(--gap, 16px); }
+    .stack.gap-6  { --gap: 6px; }
+    .stack.gap-8  { --gap: 8px; }
+    .stack.gap-12 { --gap: 12px; }
+    .stack.gap-16 { --gap: 16px; }
+    .stack.gap-20 { --gap: 20px; }
+    .stack.gap-24 { --gap: 24px; }
+    .row { display: flex; flex-direction: row; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .row.gap-6  { gap: 6px; } .row.gap-8  { gap: 8px; } .row.gap-12 { gap: 12px; }
+    .row.gap-16 { gap: 16px; } .row.gap-24 { gap: 24px; }
+    .spacer { flex: 1 1 auto; }
+    .grid { display: grid; gap: 12px; }
+    .grid.gap-16 { gap: 16px; }
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid.cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .grid.cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    @media (max-width: 1100px) {
+      .grid.cols-5, .grid.cols-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .grid.cols-2, .grid.cols-3, .grid.cols-4, .grid.cols-5, .grid.cols-6 { grid-template-columns: 1fr; }
+    }
+    .divider { height: 1px; background: var(--stroke-faint); border: 0; margin: 0; }
+
+    .stat { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+            border-left: 4px solid var(--cisco-indigo); border-radius: var(--radius-md);
+            padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
+            box-shadow: var(--shadow-card); }
+    .stat-value { font-size: 24px; font-weight: 700; line-height: 1.1;
+                  color: var(--text-primary); letter-spacing: -0.01em; }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
+                  letter-spacing: 0.06em; color: var(--text-secondary); line-height: 1.35; }
+    .stat[data-tone='success']  { border-left-color: var(--cisco-green); }
+    .stat[data-tone='success']  .stat-value { color: var(--cisco-green-dark); }
+    .stat[data-tone='warning']  { border-left-color: var(--cisco-yellow); }
+    .stat[data-tone='warning']  .stat-value { color: var(--cisco-yellow-dark); }
+    .stat[data-tone='danger']   { border-left-color: var(--cisco-red); }
+    .stat[data-tone='danger']   .stat-value { color: var(--cisco-red-dark); }
+    .stat[data-tone='info']     { border-left-color: var(--cisco-blue); }
+    .stat[data-tone='info']     .stat-value { color: var(--cisco-indigo); }
+
+    .card { background: var(--bg-elevated); border: 1px solid var(--stroke-soft);
+            border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-card); }
+    .card-header { padding: 10px 14px; font-size: 12px; font-weight: 700;
+                   text-transform: uppercase; letter-spacing: 0.05em;
+                   color: var(--cisco-indigo); background: var(--cisco-gray-50);
+                   border-bottom: 1px solid var(--stroke-faint); display: flex;
+                   align-items: center; justify-content: space-between; gap: 12px; }
+    .card-body { padding: 14px 16px; }
+
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px;
+            font-size: 11px; font-weight: 600; border-radius: 999px;
+            background: var(--cisco-gray-100); color: var(--cisco-gray-700);
+            border: 1px solid transparent; white-space: nowrap; letter-spacing: 0.02em; }
+    .pill.sm { padding: 1px 8px; font-size: 10px; }
+    .pill[data-tone='success'] { background: var(--cisco-green-bg);  color: var(--cisco-green-dark); }
+    .pill[data-tone='warning'] { background: var(--cisco-yellow-bg); color: var(--cisco-yellow-dark); }
+    .pill[data-tone='danger']  { background: var(--cisco-red-bg);    color: var(--cisco-red-dark); }
+    .pill[data-tone='info']    { background: var(--cisco-info-bg);   color: var(--cisco-indigo); }
+
+    .callout { border: 1px solid var(--stroke-soft); border-left-width: 4px;
+               border-radius: var(--radius-md); padding: 14px 16px; background: var(--bg-surface);
+               display: flex; flex-direction: column; gap: 6px; }
+    .callout-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; }
+    .callout-body { color: var(--text-secondary); }
+    .callout[data-tone='info']    { border-left-color: var(--cisco-blue);   background: var(--cisco-info-bg); }
+    .callout[data-tone='info']    .callout-title { color: var(--cisco-indigo); }
+    .callout[data-tone='success'] { border-left-color: var(--cisco-green);  background: var(--cisco-green-bg); }
+    .callout[data-tone='success'] .callout-title { color: var(--cisco-green-dark); }
+    .callout[data-tone='warning'] { border-left-color: var(--cisco-yellow); background: var(--cisco-yellow-bg); }
+    .callout[data-tone='warning'] .callout-title { color: var(--cisco-yellow-dark); }
+    .callout[data-tone='danger']  { border-left-color: var(--cisco-red);    background: var(--cisco-red-bg); }
+    .callout[data-tone='danger']  .callout-title { color: var(--cisco-red-dark); }
+
+    .table-wrap { border: 1px solid var(--stroke-soft); border-radius: var(--radius-md);
+                  overflow: auto; background: var(--bg-surface); }
+    table.cisco-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cisco-table thead { background: var(--cisco-gray-50); }
+    .cisco-table th { font-weight: 700; font-size: 11px; text-transform: uppercase;
+                      letter-spacing: 0.06em; color: var(--cisco-indigo); padding: 10px 12px;
+                      text-align: left; border-bottom: 1px solid var(--stroke-soft);
+                      white-space: nowrap; }
+    .cisco-table td { padding: 9px 12px; border-bottom: 1px solid var(--stroke-faint);
+                      vertical-align: top; }
+    .cisco-table tbody tr:last-child td { border-bottom: 0; }
+    .cisco-table.striped tbody tr:nth-child(even) { background: var(--cisco-gray-50); }
+    .cisco-table .num  { text-align: right; font-variant-numeric: tabular-nums; }
+    .cisco-table .right { text-align: right; }
+    .cisco-table .left  { text-align: left; }
+    .cisco-table tr[data-tone='success'] { background: var(--cisco-green-bg)  !important; }
+    .cisco-table tr[data-tone='warning'] { background: var(--cisco-yellow-bg) !important; }
+    .cisco-table tr[data-tone='danger']  { background: var(--cisco-red-bg)    !important; }
+    .cisco-table tr[data-tone='info']    { background: var(--cisco-info-bg)   !important; }
+
+    .chart-frame { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+                   border-radius: var(--radius-md); padding: 12px 14px; position: relative; }
+    .chart-frame .chart-canvas-wrap { position: relative; width: 100%; }
+    .chart-caption { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+    .footnote { font-size: 11.5px; color: var(--text-tertiary); line-height: 1.5; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .kpi-band { background: linear-gradient(135deg, var(--cisco-indigo-900) 0%, var(--cisco-indigo) 100%);
+                color: var(--cisco-white); border-radius: var(--radius-md); padding: 18px 24px;
+                display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .kpi-band .kpi-headline { font-size: 15px; font-weight: 500;
+                              color: rgba(255,255,255,0.85); max-width: 60%; }
+    .kpi-band .kpi-headline strong { color: var(--cisco-white); font-weight: 700; }
+    .kpi-band .kpi-headline em { font-style: normal; color: var(--cisco-blue); font-weight: 700; }
+
+    @media print {
+      .cisco-brandbar { background: var(--cisco-white); color: var(--cisco-black); }
+      .cisco-logo { color: var(--cisco-black); }
+      .tabs, .page-meta { display: none; }
+      .page-shell { padding: 0; }
+      .card, .stat, .callout, .chart-frame, .table-wrap { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cisco-brandbar" role="banner">
+    <div class="cisco-brandbar-inner">
+      <span class="cisco-logo" aria-label="Cisco">
+        <span class="cisco-logo-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+        cisco
+      </span>
+      <span class="cisco-brand-divider" aria-hidden="true"></span>
+      <span class="cisco-brand-title">Global Benefits Dashboard</span>
+      <span class="cisco-brand-spacer"></span>
+      <span class="cisco-brand-meta">
+        <span class="pill" data-tone="info">Phase 1 Prototype</span>
+        <span>Build: dashboard_build/output/</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <h1 class="page-title">Global Benefits Dashboard</h1>
+      <p class="page-subtitle">
+        Headcount snapshot 1 May 2026 &middot; FY26 Plan (1 Aug 2025 &ndash; 31 Jul 2026) &middot;
+        All USD post-HC-allocation.
+      </p>
+      <div class="page-meta">
+        <span>Last refresh: 13 May 2026</span>
+        <span>Owner: Global Benefits Insights team</span>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Dashboard tabs">
+      <a class="tab is-active" href="index.html">Overview</a>
+      <a class="tab" href="financials.html">Financials</a>
+      <a class="tab" href="adoption.html">Adoption</a>
+      <a class="tab" href="experience.html">Experience</a>
+      <a class="tab" href="dictionary.html">Dictionary</a>
+    </nav>
+
+    <section class="stack gap-24">
+      <div class="kpi-band" role="region" aria-label="Story tile">
+        <div class="kpi-headline">
+          US carries <strong>83.2% of global benefits spend</strong> on
+          <strong>46.7% of global headcount</strong> &mdash; the
+          <em>highest single-region concentration</em> in the portfolio.
+          Optum EAP utilization runs <em>3.94%</em> on a Cisco-HC denominator vs
+          a 2.5% book-of-business benchmark.
+        </div>
+        <div class="row gap-16" style="margin-left:auto;">
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.7);">FY26 spend</div>
+            <div style="font-size:24px; font-weight:700;">$2.38B</div>
+          </div>
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.7);">Cost / EE</div>
+            <div style="font-size:24px; font-weight:700;">$27,789</div>
+          </div>
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.7);">Cisco HC</div>
+            <div style="font-size:24px; font-weight:700;">85,639</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="h1">Choose a pillar</h2>
+
+      <div class="grid cols-4 gap-16">
+        <a class="card" href="financials.html" style="text-decoration:none; color:inherit;">
+          <div class="card-header">
+            Financials
+            <span class="pill sm" data-tone="info">FY26 plan</span>
+          </div>
+          <div class="card-body stack gap-8">
+            <p class="text-secondary">
+              Region spend, cost per eligible employee, APJC country drill-in,
+              YoY trends, US/Canada budget commitments, MMB EMEA insurance
+              broker activity, top countries by spend, data completeness.
+            </p>
+            <div class="row gap-6">
+              <span class="pill" data-tone="info">5 regions</span>
+              <span class="pill" data-tone="info">91 countries</span>
+              <span class="pill" data-tone="warning">35/91 financials</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card" href="adoption.html" style="text-decoration:none; color:inherit;">
+          <div class="card-header">
+            Adoption
+            <span class="pill sm" data-tone="success">Live</span>
+          </div>
+          <div class="card-body stack gap-8">
+            <p class="text-secondary">
+              Optum EAP utilization vs BoB, Pulse monthly trend, Wellthy
+              engagement growth, RethinkCare reach, Darwin (EMEA portal)
+              login%, APJC preventive care.
+            </p>
+            <div class="row gap-6">
+              <span class="pill" data-tone="success">Optum 3.9% YTD</span>
+              <span class="pill" data-tone="info">Wellthy 6.9%</span>
+              <span class="pill" data-tone="info">Rethink 4.84%</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card" href="experience.html" style="text-decoration:none; color:inherit;">
+          <div class="card-header">
+            Experience
+            <span class="pill sm" data-tone="success">Q1 2026</span>
+          </div>
+          <div class="card-body stack gap-8">
+            <p class="text-secondary">
+              Optum CSAT, Wellthy NPS, productivity outcomes, top presenting
+              issues by region, APJC well-being &amp; time-off &amp; plan
+              design, MMB SLA, Darwin satisfaction, EMEA case operations,
+              Mexico onsite clinic.
+            </p>
+            <div class="row gap-6">
+              <span class="pill" data-tone="success">CSAT 94.4%</span>
+              <span class="pill" data-tone="warning">NPS 81 (was 93)</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card" href="dictionary.html" style="text-decoration:none; color:inherit;">
+          <div class="card-header">
+            Dictionary
+            <span class="pill sm">Reference</span>
+          </div>
+          <div class="card-body stack gap-8">
+            <p class="text-secondary">
+              KPI definitions, formulas, sources, refresh cadence, open items,
+              and locked policy decisions (denominator, allocation, FX,
+              reconciliation).
+            </p>
+            <div class="row gap-6">
+              <span class="pill" data-tone="info">29 KPIs</span>
+              <span class="pill" data-tone="info">15 sources</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <h2 class="h1">Locked policy decisions</h2>
+      <div class="grid cols-2 gap-16">
+        <div class="callout" data-tone="success">
+          <h3 class="callout-title">Headcount denominator</h3>
+          <div class="callout-body">
+            Cisco Headcount (May 2026, 85,639 EE across 91 countries) is the
+            canonical denominator for every per-EE metric in both Financials
+            and Adoption. Vendor-reported eligible HC shown as a footnote
+            variance only.
+          </div>
+        </div>
+        <div class="callout" data-tone="success">
+          <h3 class="callout-title">Shared global program attribution</h3>
+          <div class="callout-body">
+            Vendor lines funded inside the US Fringe budget that deliver value
+            globally (Wellthy, Global EAP via UBH/Optum, ISOS, Pavelka, Bright
+            Horizons National) are reallocated to all regions in proportion to
+            Cisco HC share. Headline US tile shows both gross and
+            post-allocation Cost/EE.
+          </div>
+        </div>
+        <div class="callout" data-tone="success">
+          <h3 class="callout-title">Currency normalization</h3>
+          <div class="callout-body">
+            USD is canonical. CAD converted at the monthly snapshot rate
+            (May 2026 = 0.73). FX table stored in
+            <code>dashboard_build/inputs/fx_snapshot.csv</code> and versioned
+            with every build.
+          </div>
+        </div>
+        <div class="callout" data-tone="info">
+          <h3 class="callout-title">Side-by-side reconciliation</h3>
+          <div class="callout-body">
+            When two sources scope the same metric differently &mdash; APJC
+            country-team vs ZBB, or PO-able vs payroll-fringe budget &mdash;
+            the dashboard renders both, surfaces the variance, and keeps the
+            long-running source (ZBB / FY26 Plan) as system of record. No
+            silent overwrites.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

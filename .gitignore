@@ -1,0 +1,20 @@
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OneDrive lock & sync files
+*.tmp
+~$*
+
+# Local logs / backups
+*.log
+*.bak
+*.orig

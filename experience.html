@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Experience &middot; Cisco Global Benefits Dashboard</title>
+  <meta name="description" content="Experience pillar - Optum CSAT, Wellthy NPS, APJC well-being and time-off, MMB SLA, Darwin satisfaction, EMEA cases, Mexico clinic." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <style>
+    /* ========================================================================
+       Cisco Global Benefits Dashboard - inline brand stylesheet.
+       Cisco Blue #00BCEB / Indigo #005073, Cisco Green / Yellow / Red status
+       palette, CiscoSans with Inter / system-sans fallback.
+       ====================================================================== */
+    :root {
+      --cisco-blue: #00bceb;
+      --cisco-blue-700: #049fd9;
+      --cisco-indigo: #005073;
+      --cisco-indigo-900: #00374f;
+      --cisco-black: #1d1d1d;
+      --cisco-gray-900: #39393b;
+      --cisco-gray-700: #58585b;
+      --cisco-gray-500: #6e6e73;
+      --cisco-gray-300: #c6c7ca;
+      --cisco-gray-200: #dedede;
+      --cisco-gray-100: #ebebeb;
+      --cisco-gray-50:  #f7f7f8;
+      --cisco-white: #ffffff;
+      --cisco-green: #6abf4b;
+      --cisco-green-dark: #4a8a35;
+      --cisco-green-bg: rgba(106, 191, 75, 0.12);
+      --cisco-yellow: #fbab18;
+      --cisco-yellow-dark: #b87b0a;
+      --cisco-yellow-bg: rgba(251, 171, 24, 0.14);
+      --cisco-red: #e2231a;
+      --cisco-red-dark: #a71811;
+      --cisco-red-bg: rgba(226, 35, 26, 0.10);
+      --cisco-info: var(--cisco-indigo);
+      --cisco-info-bg: rgba(0, 80, 115, 0.08);
+      --bg-page: #f7f8fa;
+      --bg-surface: #ffffff;
+      --bg-elevated: #ffffff;
+      --bg-soft: var(--cisco-gray-50);
+      --text-primary: var(--cisco-black);
+      --text-secondary: var(--cisco-gray-700);
+      --text-tertiary: var(--cisco-gray-500);
+      --text-quaternary: #98989c;
+      --stroke-strong: var(--cisco-gray-300);
+      --stroke-soft: var(--cisco-gray-200);
+      --stroke-faint: var(--cisco-gray-100);
+      --accent: var(--cisco-indigo);
+      --accent-soft: var(--cisco-info-bg);
+      --radius-xs: 3px; --radius-sm: 4px; --radius-md: 6px; --radius-lg: 10px;
+      --shadow-card: 0 1px 2px rgba(0, 55, 79, 0.05), 0 1px 3px rgba(0, 55, 79, 0.04);
+      --shadow-elevated: 0 4px 12px rgba(0, 55, 79, 0.08);
+      --font-sans: 'CiscoSans', 'CiscoSansTT', Inter, -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; background: var(--bg-page); color: var(--text-primary);
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.45;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--cisco-indigo); text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 120ms ease, color 120ms ease; }
+    a:hover { color: var(--cisco-blue-700); border-bottom-color: currentColor; }
+    p { margin: 0; }
+    ul { margin: 0; padding-left: 18px; }
+
+    .cisco-brandbar { background: var(--cisco-black); color: var(--cisco-white);
+                      border-bottom: 4px solid var(--cisco-blue); }
+    .cisco-brandbar-inner { max-width: 1320px; margin: 0 auto; padding: 14px 32px;
+                            display: flex; align-items: center; gap: 16px; }
+    .cisco-logo { font-family: var(--font-sans); font-weight: 700; font-size: 22px;
+                  letter-spacing: -0.01em; color: var(--cisco-white);
+                  display: inline-flex; align-items: center; gap: 10px; }
+    .cisco-logo-mark { width: 28px; height: 18px; display: inline-flex;
+                       align-items: flex-end; gap: 2px; }
+    .cisco-logo-mark span { display: inline-block; width: 3px;
+                            background: var(--cisco-blue); border-radius: 1px; }
+    .cisco-logo-mark span:nth-child(1) { height: 35%; }
+    .cisco-logo-mark span:nth-child(2) { height: 70%; }
+    .cisco-logo-mark span:nth-child(3) { height: 100%; }
+    .cisco-logo-mark span:nth-child(4) { height: 70%; }
+    .cisco-logo-mark span:nth-child(5) { height: 35%; }
+    .cisco-brand-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.25); }
+    .cisco-brand-title { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .cisco-brand-spacer { flex: 1 1 auto; }
+    .cisco-brand-meta { display: inline-flex; align-items: center; gap: 10px;
+                        font-size: 12px; color: rgba(255,255,255,0.7); }
+
+    .page-shell { max-width: 1320px; margin: 0 auto; padding: 28px 32px 80px; }
+    .page-header { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .page-title { font-size: 28px; font-weight: 700; line-height: 1.15;
+                  letter-spacing: -0.015em; color: var(--cisco-indigo); margin: 0; }
+    .page-subtitle { font-size: 14px; color: var(--text-secondary); margin: 0; }
+    .page-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+                 font-size: 12px; color: var(--text-tertiary); }
+
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--stroke-soft);
+            margin-bottom: 24px; flex-wrap: wrap; }
+    .tab { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
+           font-size: 14px; font-weight: 500; color: var(--text-secondary);
+           text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -2px;
+           transition: color 120ms ease, border-color 120ms ease, background 120ms ease; }
+    .tab:hover { color: var(--cisco-indigo); border-bottom: none; }
+    .tab.is-active { color: var(--cisco-indigo); border-bottom-color: var(--cisco-blue);
+                     font-weight: 600; }
+
+    .h1 { font-size: 24px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em;
+          color: var(--cisco-indigo); margin: 0; }
+    .h2 { font-size: 18px; font-weight: 600; line-height: 1.3; margin: 8px 0 0;
+          color: var(--text-primary); }
+    .h3 { font-size: 12px; font-weight: 600; text-transform: uppercase;
+          letter-spacing: 0.06em; color: var(--text-secondary); margin: 0; }
+    .text-secondary { color: var(--text-secondary); }
+    .text-tertiary  { color: var(--text-tertiary); }
+    .text-small     { font-size: 12px; }
+    .text-bold      { font-weight: 700; }
+    .text-semibold  { font-weight: 600; }
+
+    .stack { display: flex; flex-direction: column; }
+    .stack > * + * { margin-top: var(--gap, 16px); }
+    .stack.gap-6  { --gap: 6px; }
+    .stack.gap-8  { --gap: 8px; }
+    .stack.gap-12 { --gap: 12px; }
+    .stack.gap-16 { --gap: 16px; }
+    .stack.gap-20 { --gap: 20px; }
+    .stack.gap-24 { --gap: 24px; }
+    .row { display: flex; flex-direction: row; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .row.gap-6  { gap: 6px; } .row.gap-8  { gap: 8px; } .row.gap-12 { gap: 12px; }
+    .row.gap-16 { gap: 16px; } .row.gap-24 { gap: 24px; }
+    .spacer { flex: 1 1 auto; }
+    .grid { display: grid; gap: 12px; }
+    .grid.gap-16 { gap: 16px; }
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid.cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .grid.cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    @media (max-width: 1100px) {
+      .grid.cols-5, .grid.cols-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .grid.cols-2, .grid.cols-3, .grid.cols-4, .grid.cols-5, .grid.cols-6 { grid-template-columns: 1fr; }
+    }
+    .divider { height: 1px; background: var(--stroke-faint); border: 0; margin: 0; }
+
+    .stat { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+            border-left: 4px solid var(--cisco-indigo); border-radius: var(--radius-md);
+            padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
+            box-shadow: var(--shadow-card); }
+    .stat-value { font-size: 24px; font-weight: 700; line-height: 1.1;
+                  color: var(--text-primary); letter-spacing: -0.01em; }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
+                  letter-spacing: 0.06em; color: var(--text-secondary); line-height: 1.35; }
+    .stat[data-tone='success']  { border-left-color: var(--cisco-green); }
+    .stat[data-tone='success']  .stat-value { color: var(--cisco-green-dark); }
+    .stat[data-tone='warning']  { border-left-color: var(--cisco-yellow); }
+    .stat[data-tone='warning']  .stat-value { color: var(--cisco-yellow-dark); }
+    .stat[data-tone='danger']   { border-left-color: var(--cisco-red); }
+    .stat[data-tone='danger']   .stat-value { color: var(--cisco-red-dark); }
+    .stat[data-tone='info']     { border-left-color: var(--cisco-blue); }
+    .stat[data-tone='info']     .stat-value { color: var(--cisco-indigo); }
+
+    .card { background: var(--bg-elevated); border: 1px solid var(--stroke-soft);
+            border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-card); }
+    .card-header { padding: 10px 14px; font-size: 12px; font-weight: 700;
+                   text-transform: uppercase; letter-spacing: 0.05em;
+                   color: var(--cisco-indigo); background: var(--cisco-gray-50);
+                   border-bottom: 1px solid var(--stroke-faint); display: flex;
+                   align-items: center; justify-content: space-between; gap: 12px; }
+    .card-body { padding: 14px 16px; }
+
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px;
+            font-size: 11px; font-weight: 600; border-radius: 999px;
+            background: var(--cisco-gray-100); color: var(--cisco-gray-700);
+            border: 1px solid transparent; white-space: nowrap; letter-spacing: 0.02em; }
+    .pill.sm { padding: 1px 8px; font-size: 10px; }
+    .pill[data-tone='success'] { background: var(--cisco-green-bg);  color: var(--cisco-green-dark); }
+    .pill[data-tone='warning'] { background: var(--cisco-yellow-bg); color: var(--cisco-yellow-dark); }
+    .pill[data-tone='danger']  { background: var(--cisco-red-bg);    color: var(--cisco-red-dark); }
+    .pill[data-tone='info']    { background: var(--cisco-info-bg);   color: var(--cisco-indigo); }
+
+    .callout { border: 1px solid var(--stroke-soft); border-left-width: 4px;
+               border-radius: var(--radius-md); padding: 14px 16px; background: var(--bg-surface);
+               display: flex; flex-direction: column; gap: 6px; }
+    .callout-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; }
+    .callout-body { color: var(--text-secondary); }
+    .callout[data-tone='info']    { border-left-color: var(--cisco-blue);   background: var(--cisco-info-bg); }
+    .callout[data-tone='info']    .callout-title { color: var(--cisco-indigo); }
+    .callout[data-tone='success'] { border-left-color: var(--cisco-green);  background: var(--cisco-green-bg); }
+    .callout[data-tone='success'] .callout-title { color: var(--cisco-green-dark); }
+    .callout[data-tone='warning'] { border-left-color: var(--cisco-yellow); background: var(--cisco-yellow-bg); }
+    .callout[data-tone='warning'] .callout-title { color: var(--cisco-yellow-dark); }
+    .callout[data-tone='danger']  { border-left-color: var(--cisco-red);    background: var(--cisco-red-bg); }
+    .callout[data-tone='danger']  .callout-title { color: var(--cisco-red-dark); }
+
+    .table-wrap { border: 1px solid var(--stroke-soft); border-radius: var(--radius-md);
+                  overflow: auto; background: var(--bg-surface); }
+    table.cisco-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cisco-table thead { background: var(--cisco-gray-50); }
+    .cisco-table th { font-weight: 700; font-size: 11px; text-transform: uppercase;
+                      letter-spacing: 0.06em; color: var(--cisco-indigo); padding: 10px 12px;
+                      text-align: left; border-bottom: 1px solid var(--stroke-soft);
+                      white-space: nowrap; }
+    .cisco-table td { padding: 9px 12px; border-bottom: 1px solid var(--stroke-faint);
+                      vertical-align: top; }
+    .cisco-table tbody tr:last-child td { border-bottom: 0; }
+    .cisco-table.striped tbody tr:nth-child(even) { background: var(--cisco-gray-50); }
+    .cisco-table .num  { text-align: right; font-variant-numeric: tabular-nums; }
+    .cisco-table .right { text-align: right; }
+    .cisco-table .left  { text-align: left; }
+    .cisco-table tr[data-tone='success'] { background: var(--cisco-green-bg)  !important; }
+    .cisco-table tr[data-tone='warning'] { background: var(--cisco-yellow-bg) !important; }
+    .cisco-table tr[data-tone='danger']  { background: var(--cisco-red-bg)    !important; }
+    .cisco-table tr[data-tone='info']    { background: var(--cisco-info-bg)   !important; }
+
+    .chart-frame { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+                   border-radius: var(--radius-md); padding: 12px 14px; position: relative; }
+    .chart-frame .chart-canvas-wrap { position: relative; width: 100%; }
+    .chart-caption { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+    .footnote { font-size: 11.5px; color: var(--text-tertiary); line-height: 1.5; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .kpi-band { background: linear-gradient(135deg, var(--cisco-indigo-900) 0%, var(--cisco-indigo) 100%);
+                color: var(--cisco-white); border-radius: var(--radius-md); padding: 18px 24px;
+                display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .kpi-band .kpi-headline { font-size: 15px; font-weight: 500;
+                              color: rgba(255,255,255,0.85); max-width: 60%; }
+    .kpi-band .kpi-headline strong { color: var(--cisco-white); font-weight: 700; }
+    .kpi-band .kpi-headline em { font-style: normal; color: var(--cisco-blue); font-weight: 700; }
+
+    @media print {
+      .cisco-brandbar { background: var(--cisco-white); color: var(--cisco-black); }
+      .cisco-logo { color: var(--cisco-black); }
+      .tabs, .page-meta { display: none; }
+      .page-shell { padding: 0; }
+      .card, .stat, .callout, .chart-frame, .table-wrap { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cisco-brandbar" role="banner">
+    <div class="cisco-brandbar-inner">
+      <span class="cisco-logo" aria-label="Cisco">
+        <span class="cisco-logo-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+        cisco
+      </span>
+      <span class="cisco-brand-divider" aria-hidden="true"></span>
+      <span class="cisco-brand-title">Global Benefits Dashboard</span>
+      <span class="cisco-brand-spacer"></span>
+      <span class="cisco-brand-meta">
+        <span class="pill" data-tone="info">Phase 1 Prototype</span>
+        <span>YTD 2025 / Q2 FY26</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <h1 class="page-title">Experience</h1>
+      <p class="page-subtitle">
+        How employees feel about benefits - satisfaction (CSAT/NPS), outcomes (absenteeism,
+        stress), top presenting issues, APJC plan-design coverage, MMB country service quality.
+      </p>
+      <div class="page-meta">
+        <span>Optum CSAT: 142 surveys YTD 2025</span>
+        <span>Wellthy NPS: Q1 2026 n=53</span>
+        <span>MMB / Darwin: Q2 FY26 country reps</span>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Dashboard tabs">
+      <a class="tab" href="index.html">Overview</a>
+      <a class="tab" href="financials.html">Financials</a>
+      <a class="tab" href="adoption.html">Adoption</a>
+      <a class="tab is-active" href="experience.html" aria-current="page">Experience</a>
+      <a class="tab" href="dictionary.html">Dictionary</a>
+    </nav>
+
+    <section class="stack gap-24">
+
+      <!-- Story tile --------------------------------------------------- -->
+      <div class="callout" data-tone="success">
+        <h3 class="callout-title">Story tile</h3>
+        <div class="callout-body">
+          Optum EAP CSAT is <strong>94.4%</strong> on 142 surveys, with <strong>95.1%</strong>
+          reporting timely access. Cisco employees who complete an EAP engagement self-report
+          a <strong>23%</strong> reduction in absent days and a 23% improvement in stress.
+          Wellthy NPS dropped from 93 (Q4 2025) to 81 (Q1 2026) on a small but growing survey
+          base &mdash; still elite-tier, but worth a closer read on the "more present at work"
+          signal that fell from 100% to 33%.
+        </div>
+      </div>
+
+      <!-- KPI band ----------------------------------------------------- -->
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="success">
+          <div class="stat-value">94.4%</div>
+          <div class="stat-label">Optum CSAT (n=142)</div>
+        </div>
+        <div class="stat" data-tone="warning">
+          <div class="stat-value">81</div>
+          <div class="stat-label">Wellthy NPS Q1 2026 (was 93)</div>
+        </div>
+        <div class="stat" data-tone="success">
+          <div class="stat-value">23.0%</div>
+          <div class="stat-label">Absenteeism reduction (Optum)</div>
+        </div>
+        <div class="stat" data-tone="success">
+          <div class="stat-value">23.0%</div>
+          <div class="stat-label">Stress improvement (Optum)</div>
+        </div>
+      </div>
+
+      <!-- Optum experience cards -------------------------------------- -->
+      <h2 class="h2">Optum EAP &mdash; employee experience indicators</h2>
+      <div class="grid cols-3 gap-16">
+        <div class="card">
+          <div class="card-header">Satisfaction &amp; access <span class="pill sm" data-tone="success">YTD 2025</span></div>
+          <div class="card-body stack gap-8">
+            <div class="row"><span>Overall CSAT</span><span class="spacer"></span><span class="text-semibold">94.4%</span></div>
+            <div class="row"><span>Access timely &amp; prompt</span><span class="spacer"></span><span class="text-semibold">95.1%</span></div>
+            <div class="row"><span>Able to manage issue</span><span class="spacer"></span><span class="text-semibold">87.6%</span></div>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">Source: 142 client surveys, Jan-Dec 2025</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Productivity outcomes <span class="pill sm" data-tone="success">Net change</span></div>
+          <div class="card-body stack gap-8">
+            <div class="row"><span>Improved stress</span><span class="spacer"></span><span class="text-semibold">23.0%</span></div>
+            <div class="row"><span>Absenteeism net &Delta;</span><span class="spacer"></span><span class="text-semibold">23.0%</span></div>
+            <div class="row"><span>Presenteeism net &Delta;</span><span class="spacer"></span><span class="text-semibold">22.9%</span></div>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">Avg 1.8 fewer absent days, 2.3 more present days post-EAP</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Beyond counselling <span class="pill sm" data-tone="info">Engagement reach</span></div>
+          <div class="card-body stack gap-8">
+            <div class="row"><span>LiveWell web sessions</span><span class="spacer"></span><span class="text-semibold">6,547</span></div>
+            <div class="row"><span>Trainings attendees</span><span class="spacer"></span><span class="text-semibold">1,815</span></div>
+            <div class="row"><span>Vendor engagement %</span><span class="spacer"></span><span class="text-semibold">22.6%</span></div>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">BoB benchmark engagement: 17.3%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wellthy survey ----------------------------------------------- -->
+      <h2 class="h2">Wellthy survey outcomes &mdash; Q4 2025 vs Q1 2026</h2>
+      <div class="callout" data-tone="warning">
+        <h3 class="callout-title">Sample-size caveat</h3>
+        <div class="callout-body">
+          Q4 2025 survey n=29; Q1 2026 n=53. The Q4 100% "more present at work" result was
+          driven by 29 respondents and is unlikely to be a real population effect. The Q1
+          numbers with n=53 are more directionally trustworthy but still small &mdash; treat
+          the trend lines as signals to discuss with Wellthy, not headline outcomes for an
+          executive audience yet.
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="cisco-table">
+          <thead>
+            <tr>
+              <th>Outcome</th>
+              <th class="right">Q4 2025 (n=29)</th>
+              <th class="right">Q1 2026 (n=53)</th>
+              <th>Direction</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Less stressed with Wellthy support</td><td class="num">93%</td><td class="num">83%</td><td>&minus;10pp</td></tr>
+            <tr><td>More present at work</td><td class="num">100%</td><td class="num">33%</td><td>&minus;67pp (small n)</td></tr>
+            <tr><td>Avoided missing work</td><td class="num">78%</td><td class="num">38%</td><td>&minus;40pp (small n)</td></tr>
+            <tr><td>NPS</td><td class="num">93</td><td class="num">81</td><td>93 &rarr; 81 (still elite)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Top presenting issues --------------------------------------- -->
+      <h2 class="h2">Top presenting issues by region (Optum YTD 2025)</h2>
+      <p class="text-small text-secondary">
+        Cisco-specific top issues differ meaningfully from Optum's book-of-business (taxation,
+        anxiety, couples). EMEA and LATAM both lead with <strong>Taxation</strong>, signalling
+        continued employee demand for personal-finance support &mdash; relevant cross-pillar
+        input for the BrightPlan/Wellthy financial-coaching offerings.
+      </p>
+      <div class="table-wrap">
+        <table class="cisco-table striped">
+          <thead>
+            <tr><th>Region</th><th>Top issue #1</th><th>Top issue #2</th><th>Top issue #3</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Global (non-US)</td><td>Anxious/Worry</td><td>General EAP Benefit</td><td>Low Mood/Elevated Mood</td></tr>
+            <tr><td>Canada</td><td>Anxious/Worry</td><td>General EWS Benefit</td><td>Parenting</td></tr>
+            <tr><td>APJC</td><td>Couple/Primary relationship</td><td>Anxious/Worry</td><td>Other - Health Related</td></tr>
+            <tr><td>EMEA</td><td>Taxation</td><td>Anxious/Worry</td><td>Couple/Primary relationship</td></tr>
+            <tr><td>LATAM</td><td>Taxation</td><td>Family: Dispute</td><td>Real Estate</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- APJC well-being --------------------------------------------- -->
+      <h2 class="h2">APJC well-being satisfaction (FY25)</h2>
+      <p class="text-small text-secondary">
+        Sub-region rollup from the APJC Total Rewards team. Satisfaction is a 1-10 score;
+        Korea is N/A in source. ANZ leads on participation; ASEAN's 7.6 score is the lowest
+        signal in the set.
+      </p>
+      <div class="grid cols-6 gap-12">
+        <div class="stat" data-tone="success"><div class="stat-value">9.4</div><div class="stat-label">ANZ satisfaction</div></div>
+        <div class="stat" data-tone="success"><div class="stat-value">9.5</div><div class="stat-label">GC satisfaction</div></div>
+        <div class="stat" data-tone="info"><div class="stat-value">8.9</div><div class="stat-label">India satisfaction</div></div>
+        <div class="stat" data-tone="success"><div class="stat-value">9.5</div><div class="stat-label">Japan satisfaction</div></div>
+        <div class="stat"><div class="stat-value">N/A</div><div class="stat-label">Korea satisfaction</div></div>
+        <div class="stat" data-tone="warning"><div class="stat-value">7.6</div><div class="stat-label">ASEAN satisfaction</div></div>
+      </div>
+      <div class="table-wrap">
+        <table class="cisco-table">
+          <thead>
+            <tr>
+              <th>Sub-region</th>
+              <th class="right">Participation #</th>
+              <th class="right">Participation %</th>
+              <th class="right">Satisfaction (1-10)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>ANZ</td><td class="num">769</td><td class="num">56%</td><td class="num">9.4</td></tr>
+            <tr><td>GC</td><td class="num">913</td><td class="num">29%</td><td class="num">9.5</td></tr>
+            <tr><td>India</td><td class="num">4,028</td><td class="num">25%</td><td class="num">8.9</td></tr>
+            <tr><td>Japan</td><td class="num">288</td><td class="num">23%</td><td class="num">9.5</td></tr>
+            <tr><td>Korea</td><td class="num">22</td><td class="num">7%</td><td class="num">N/A (N/A in source)</td></tr>
+            <tr><td>ASEAN</td><td class="num">454</td><td class="num">33%</td><td class="num">7.6</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- APJC time off ----------------------------------------------- -->
+      <h2 class="h2">APJC time off (FY25)</h2>
+      <p class="text-small text-secondary">
+        Vacation utilization = leave taken / leave entitlement. Sick leave utilization = people
+        on leave / HC. Watch the low-vacation cluster (Japan 28%, Taiwan 30%, Korea 36%) and
+        India's elevated sick leave (71%) &mdash; both worth a culture/policy conversation.
+      </p>
+      <div class="table-wrap">
+        <table class="cisco-table striped">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Sub-region</th>
+              <th class="right">Vacation utilization</th>
+              <th class="right">Sick leave utilization</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Australia</td><td>ANZ</td><td class="num">73%</td><td class="num">69%</td><td></td></tr>
+            <tr><td>New Zealand</td><td>ANZ</td><td class="num">67%</td><td class="num">43.9%</td><td></td></tr>
+            <tr><td>China</td><td>GC</td><td class="num">71%</td><td class="num">31%</td><td></td></tr>
+            <tr><td>Hong Kong</td><td>GC</td><td class="num">79%</td><td class="num">28.7%</td><td></td></tr>
+            <tr data-tone="warning"><td>Taiwan</td><td>GC</td><td class="num">30%</td><td class="num">22.8%</td><td></td></tr>
+            <tr data-tone="info"><td>India</td><td>India</td><td class="num">48%</td><td class="num">70.9%</td><td></td></tr>
+            <tr data-tone="warning"><td>Japan</td><td>Japan</td><td class="num">28%</td><td class="num">&mdash;</td><td>NA in source</td></tr>
+            <tr data-tone="warning"><td>Korea, Republic of</td><td>Korea</td><td class="num">36%</td><td class="num">24.1%</td><td></td></tr>
+            <tr><td>Singapore</td><td>ASEAN</td><td class="num">65%</td><td class="num">41.7%</td><td></td></tr>
+            <tr><td>Malaysia</td><td>ASEAN</td><td class="num">71%</td><td class="num">44%</td><td></td></tr>
+            <tr><td>Indonesia</td><td>ASEAN</td><td class="num">55%</td><td class="num">0%</td><td>reported 0 - verify</td></tr>
+            <tr><td>Vietnam</td><td>ASEAN</td><td class="num">79%</td><td class="num">28.4%</td><td></td></tr>
+            <tr><td>Thailand</td><td>ASEAN</td><td class="num">65%</td><td class="num">41.3%</td><td></td></tr>
+            <tr><td>Philippines</td><td>ASEAN</td><td class="num">72%</td><td class="num">52.2%</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- APJC plan-design coverage ----------------------------------- -->
+      <h2 class="h2">APJC plan-design coverage (FY26)</h2>
+      <p class="text-small text-secondary">
+        Country-team self-assessed plan-design grid for the 14 APJC markets. Korea is the only
+        country with mental-health coverage explicitly excluded from insurance; Japan flags a
+        partial-with-circumstances stance. Pre-existing condition exclusions remain common
+        across ASEAN.
+      </p>
+      <div class="table-wrap">
+        <table class="cisco-table striped">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Sub-region</th>
+              <th>Life ins.</th>
+              <th>Medical ins.</th>
+              <th>Mental health</th>
+              <th>Pre-existing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Australia</td><td>ANZ</td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="info">Y partial</span></td>
+            </tr>
+            <tr><td>New Zealand</td><td>ANZ</td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="warning">N</span></td>
+            </tr>
+            <tr><td>China</td><td>GC</td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="info">Y partial</span></td>
+            </tr>
+            <tr><td>Hong Kong</td><td>GC</td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="info">Y partial</span></td>
+            </tr>
+            <tr><td>Taiwan</td><td>GC</td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="warning">N</span></td>
+            </tr>
+            <tr><td>India</td><td>India</td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="warning">N</span></td>
+            </tr>
+            <tr><td>Japan</td><td>Japan</td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="info">Y partial</span></td>
+              <td><span class="pill sm" data-tone="warning">N</span></td>
+            </tr>
+            <tr data-tone="warning"><td>Korea, Republic of</td><td>Korea</td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="danger">N</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+            </tr>
+            <tr><td>Singapore</td><td>ASEAN</td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="warning">N</span></td>
+            </tr>
+            <tr><td>Malaysia</td><td>ASEAN</td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="info">Y partial</span></td>
+            </tr>
+            <tr><td>Indonesia</td><td>ASEAN</td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="info">Y partial</span></td>
+            </tr>
+            <tr><td>Vietnam</td><td>ASEAN</td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="info">Y partial</span></td>
+            </tr>
+            <tr><td>Thailand</td><td>ASEAN</td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="info">Y partial</span></td>
+            </tr>
+            <tr><td>Philippines</td><td>ASEAN</td>
+              <td><span class="pill sm" data-tone="success">Above</span></td>
+              <td><span class="pill sm" data-tone="info">Align</span></td>
+              <td><span class="pill sm" data-tone="success">Y</span></td>
+              <td><span class="pill sm" data-tone="warning">N</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">
+        Sources: APJC Measurement &amp; Metrics data collection_Insurance.xlsx +
+        _Well-being.xlsx + _Time-off.xlsx. Full notes (e.g. Australia "Y partial" = Y for
+        salary continuance, Worker's compensation) preserved in
+        <code>dashboard_build/output/apjc_benchmark_grid.csv</code>.
+      </p>
+
+      <hr class="divider" />
+
+      <!-- MMB SLA + Darwin satisfaction ------------------------------- -->
+      <h2 class="h2">MMB SLA + Darwin satisfaction (EMEA, Q2 FY26)</h2>
+      <p class="text-small text-secondary">
+        Country-rep self-scored 1-10 on MMB local service and on the Darwin portal. Heatmap
+        rule: green &ge; 9, amber 7-8, red &le; 6. Romania (2/10) and Saudi Arabia's Darwin
+        score (3/10) carry active remediation plans documented inside the MMB Q2 deck.
+      </p>
+      <div class="grid cols-2 gap-16">
+        <div class="card">
+          <div class="card-header">MMB SLA Survey scores</div>
+          <div class="card-body" style="padding:0;">
+            <table class="cisco-table striped">
+              <thead>
+                <tr><th>Country</th><th class="right">Q2 FY26</th><th class="right">Q1 FY26</th><th class="right">Annual avg</th><th>Note</th></tr>
+              </thead>
+              <tbody>
+                <tr data-tone="success"><td>Poland</td><td class="num">10</td><td class="num">10</td><td class="num">10</td><td></td></tr>
+                <tr data-tone="success"><td>Estonia</td><td class="num">10</td><td class="num">8</td><td class="num">9</td><td></td></tr>
+                <tr data-tone="success"><td>Egypt</td><td class="num">10</td><td class="num">9</td><td class="num">9.7</td><td></td></tr>
+                <tr data-tone="success"><td>South Africa</td><td class="num">10</td><td class="num">10</td><td class="num">9.5</td><td></td></tr>
+                <tr data-tone="success"><td>Saudi Arabia</td><td class="num">10</td><td class="num">10</td><td class="num">8.6</td><td></td></tr>
+                <tr data-tone="info"><td>Italy</td><td class="num">8</td><td class="num">8</td><td class="num">8</td><td></td></tr>
+                <tr data-tone="info"><td>Norway</td><td class="num">8</td><td class="num">7</td><td class="num">7.7</td><td></td></tr>
+                <tr data-tone="info"><td>Denmark</td><td class="num">7.5</td><td class="num">10</td><td class="num">8.3</td><td>Improved follow-up &amp; transparency</td></tr>
+                <tr data-tone="warning"><td>Pan Africa</td><td class="num">6</td><td class="num">7</td><td class="num">6.5</td><td>Post-renewal invoice process - new process in place</td></tr>
+                <tr data-tone="warning"><td>Finland</td><td class="num">4</td><td class="num">7</td><td class="num">5.5</td><td>New MMB contact introduced; better collaboration since</td></tr>
+                <tr data-tone="warning"><td>Romania</td><td class="num">2</td><td class="num">N/A</td><td class="num">2</td><td>Not responsive; Romanian team meeting requested</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Darwin portal satisfaction</div>
+          <div class="card-body" style="padding:0;">
+            <table class="cisco-table striped">
+              <thead>
+                <tr><th>Country</th><th class="right">Q2 FY26</th><th class="right">Annual avg</th><th>Note</th></tr>
+              </thead>
+              <tbody>
+                <tr data-tone="success"><td>Belgium</td><td class="num">10</td><td class="num">9.5</td><td></td></tr>
+                <tr data-tone="success"><td>Qatar</td><td class="num">10</td><td class="num">10.0</td><td></td></tr>
+                <tr data-tone="success"><td>Portugal</td><td class="num">9</td><td class="num">8.8</td><td>Working on termination reporting</td></tr>
+                <tr data-tone="info"><td>Norway</td><td class="num">8</td><td class="num">8.0</td><td></td></tr>
+                <tr data-tone="info"><td>Poland</td><td class="num">8</td><td class="num">8.5</td><td></td></tr>
+                <tr data-tone="info"><td>Italy</td><td class="num">7</td><td class="num">6.75</td><td></td></tr>
+                <tr data-tone="warning"><td>Egypt</td><td class="num">5</td><td class="num">5.25</td><td>Darwin not adding much value in benefits process</td></tr>
+                <tr data-tone="warning"><td>Saudi Arabia</td><td class="num">3</td><td class="num">7.6</td><td>Improvement plan in progress; system has gaps</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMEA HR services cases -------------------------------------- -->
+      <h2 class="h2">EMEA HR-services case operations &mdash; Q1 FY26 (Aug-Oct 2025)</h2>
+      <p class="text-small text-secondary">
+        From the EMEA Benefits Q1 FY26 Case Review. Operational signal complementing the SLA
+        survey above &mdash; case volume is structurally falling QoQ (32% drop from Q4 FY25),
+        but average case age is creeping up (6.12 -&gt; 6.24 days), driven by Car Program
+        Support cases (avg age 10.6 days, escalation rate 33%).
+      </p>
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="success">
+          <div class="stat-value">1,300</div>
+          <div class="stat-label">Q1 FY26 benefit cases (-32% vs Q4 FY25)</div>
+        </div>
+        <div class="stat" data-tone="info">
+          <div class="stat-value">18.5%</div>
+          <div class="stat-label">Escalated (241 cases)</div>
+        </div>
+        <div class="stat" data-tone="warning">
+          <div class="stat-value">6.24d</div>
+          <div class="stat-label">Average case age (days)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">58%</div>
+          <div class="stat-label">Top 3 service categories share</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="cisco-table striped">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th class="right">Cases</th>
+              <th class="right">% of EMEA</th>
+              <th class="right">EMEA HC</th>
+              <th class="right">Every Nth EE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Poland</td><td class="num">432</td><td class="num">39%</td><td class="num">2,647</td><td class="num">1 in 6</td></tr>
+            <tr><td>United Kingdom</td><td class="num">213</td><td class="num">19%</td><td class="num">3,377</td><td class="num">1 in 16</td></tr>
+            <tr><td>Portugal</td><td class="num">88</td><td class="num">8%</td><td class="num">962</td><td class="num">1 in 11</td></tr>
+            <tr><td>Germany</td><td class="num">75</td><td class="num">7%</td><td class="num">1,277</td><td class="num">1 in 17</td></tr>
+            <tr><td>France</td><td class="num">58</td><td class="num">5%</td><td class="num">804</td><td class="num">1 in 14</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">
+        Top 5 = 79% of all EMEA benefit cases. Splunk-tagged subset: 143 cases across 1,446
+        Splunkers (every 10th EE opened a case). Source:
+        <em>Q1FY26 Benefit review.pdf</em> (Marta Kobylanska, 17 Dec 2025).
+      </p>
+
+      <!-- Mexico onsite clinic ---------------------------------------- -->
+      <h2 class="h2">Mexico Onsite Clinic &mdash; March 2026 (LATAM Onsite Health)</h2>
+      <p class="text-small text-secondary">
+        Cisco MX 10 Insurgentes &amp; MX 12 Portal San Angel. Smaller-volume LATAM-only data
+        point that anchors the Onsite Health &amp; Clinic category for Mexico (currently a $0
+        line for LATAM in the unified-taxonomy spend mix).
+      </p>
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="success">
+          <div class="stat-value">33</div>
+          <div class="stat-label">Mar 2026 visits (0 escalations)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">11</div>
+          <div class="stat-label">General consults</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">22</div>
+          <div class="stat-label">Prescription/Meds</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">73/27%</div>
+          <div class="stat-label">M/F mix</div>
+        </div>
+      </div>
+      <div class="grid cols-2 gap-16">
+        <div class="chart-frame">
+          <div class="text-small text-secondary" style="margin-bottom:6px;">
+            Top diagnoses (March 2026)
+          </div>
+          <div class="chart-canvas-wrap" style="height:260px;">
+            <canvas id="chart-mexico-dx"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Health-promotion campaigns</div>
+          <div class="card-body stack gap-8">
+            <div class="row">
+              <span>Vaccination education session</span>
+              <span class="spacer"></span>
+              <span class="text-semibold">89 attendees</span>
+            </div>
+            <div class="row">
+              <span>Maternal &amp; child health campaign</span>
+              <span class="spacer"></span>
+              <span class="text-semibold">79 beneficiaries</span>
+            </div>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">
+              Recommendation from clinic: top March consult was Other Unspecified Gastro
+              Disorder; preventive measure is to keep hand-sanitizer dispensers stocked at
+              cafeterias and floor entrances.
+            </span>
+          </div>
+        </div>
+      </div>
+      <p class="footnote">
+        Source: <em>Mexico Onsite Clinic report March 2026.pdf</em>. Cisco Blue (employees) =
+        28, Cisco Red (contractors) = 4. 21-30 (14) and 31-40 (11) age cohorts dominate.
+      </p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
+  <script src="assets/charts.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var DX = [
+        ['MCU - Health Check',                9],
+        ['Other Unspecified Gastro Disorder', 8],
+        ['Pharyngitis',                       5],
+        ['Cardiovascular Disorder',           3],
+        ['Nose Disorder',                     3],
+        ['Musculoskeletal',                   2],
+        ['Skin Disorder',                     1]
+      ];
+
+      CiscoChart.bar(
+        'chart-mexico-dx',
+        DX.map(function (d) { return d[0]; }),
+        [{ name: 'Visits', data: DX.map(function (d) { return d[1]; }), tone: 'info' }],
+        { horizontal: true, height: 260, legend: false }
+      );
+    })();
+  </script>
+</body>
+</html>
