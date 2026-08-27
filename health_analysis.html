@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Health Span Analysis &middot; Cisco Global Benefits Dashboard</title>
+  <meta name="description" content="Data analysis of Cisco employee health span metrics - insights, benchmarks, risk signals, and recommendations." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <style>
+    :root {
+      --cisco-blue: #00bceb;
+      --cisco-blue-700: #049fd9;
+      --cisco-indigo: #005073;
+      --cisco-indigo-900: #00374f;
+      --cisco-black: #1d1d1d;
+      --cisco-gray-900: #39393b;
+      --cisco-gray-700: #58585b;
+      --cisco-gray-500: #6e6e73;
+      --cisco-gray-300: #c6c7ca;
+      --cisco-gray-200: #dedede;
+      --cisco-gray-100: #ebebeb;
+      --cisco-gray-50:  #f7f7f8;
+      --cisco-white: #ffffff;
+      --cisco-green: #6abf4b;
+      --cisco-green-dark: #4a8a35;
+      --cisco-green-bg: rgba(106, 191, 75, 0.12);
+      --cisco-yellow: #fbab18;
+      --cisco-yellow-dark: #b87b0a;
+      --cisco-yellow-bg: rgba(251, 171, 24, 0.14);
+      --cisco-red: #e2231a;
+      --cisco-red-dark: #a71811;
+      --cisco-red-bg: rgba(226, 35, 26, 0.10);
+      --cisco-info: var(--cisco-indigo);
+      --cisco-info-bg: rgba(0, 80, 115, 0.08);
+      --bg-page: #f7f8fa;
+      --bg-surface: #ffffff;
+      --bg-elevated: #ffffff;
+      --bg-soft: var(--cisco-gray-50);
+      --text-primary: var(--cisco-black);
+      --text-secondary: var(--cisco-gray-700);
+      --text-tertiary: var(--cisco-gray-500);
+      --text-quaternary: #98989c;
+      --stroke-strong: var(--cisco-gray-300);
+      --stroke-soft: var(--cisco-gray-200);
+      --stroke-faint: var(--cisco-gray-100);
+      --radius-xs: 3px; --radius-sm: 4px; --radius-md: 6px; --radius-lg: 10px;
+      --shadow-card: 0 1px 2px rgba(0, 55, 79, 0.05), 0 1px 3px rgba(0, 55, 79, 0.04);
+      --shadow-elevated: 0 4px 12px rgba(0, 55, 79, 0.08);
+      --font-sans: 'CiscoSans', 'CiscoSansTT', Inter, -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --health-green: #1a7c4a;
+      --health-green-light: rgba(26, 124, 74, 0.10);
+      --health-green-border: rgba(26, 124, 74, 0.30);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; background: var(--bg-page); color: var(--text-primary);
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--cisco-indigo); text-decoration: none; border-bottom: 1px solid transparent;
+        transition: border-color 120ms ease, color 120ms ease; }
+    a:hover { color: var(--cisco-blue-700); border-bottom-color: currentColor; }
+    p { margin: 0 0 0 0; }
+    ul { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 4px; }
+
+    .cisco-brandbar { background: var(--cisco-black); color: var(--cisco-white);
+                      border-bottom: 4px solid var(--cisco-blue); }
+    .cisco-brandbar-inner { max-width: 1100px; margin: 0 auto; padding: 14px 32px;
+                            display: flex; align-items: center; gap: 16px; }
+    .cisco-logo { font-family: var(--font-sans); font-weight: 700; font-size: 22px;
+                  letter-spacing: -0.01em; color: var(--cisco-white);
+                  display: inline-flex; align-items: center; gap: 10px; }
+    .cisco-logo-mark { width: 28px; height: 18px; display: inline-flex;
+                       align-items: flex-end; gap: 2px; }
+    .cisco-logo-mark span { display: inline-block; width: 3px;
+                            background: var(--cisco-blue); border-radius: 1px; }
+    .cisco-logo-mark span:nth-child(1) { height: 35%; }
+    .cisco-logo-mark span:nth-child(2) { height: 70%; }
+    .cisco-logo-mark span:nth-child(3) { height: 100%; }
+    .cisco-logo-mark span:nth-child(4) { height: 70%; }
+    .cisco-logo-mark span:nth-child(5) { height: 35%; }
+    .cisco-brand-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.25); }
+    .cisco-brand-title { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .cisco-brand-spacer { flex: 1 1 auto; }
+    .cisco-brand-meta { display: inline-flex; align-items: center; gap: 10px;
+                        font-size: 12px; color: rgba(255,255,255,0.7); }
+
+    .page-shell { max-width: 1100px; margin: 0 auto; padding: 32px 32px 80px; }
+
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--stroke-soft);
+            margin-bottom: 24px; flex-wrap: wrap; }
+    .tab { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
+           font-size: 14px; font-weight: 500; color: var(--text-secondary);
+           text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -2px;
+           transition: color 120ms ease, border-color 120ms ease; }
+    .tab:hover { color: var(--cisco-indigo); border-bottom: none; }
+    .tab.is-active { color: var(--cisco-indigo); border-bottom-color: var(--cisco-blue); font-weight: 600; }
+    .tab.health-tab { color: var(--health-green); }
+    .tab.health-tab.is-active { border-bottom-color: var(--health-green); }
+
+    .report-header { margin-bottom: 32px; }
+    .report-title { font-size: 32px; font-weight: 700; color: var(--cisco-indigo);
+                    letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 8px; }
+    .report-subtitle { font-size: 16px; color: var(--text-secondary); margin: 0 0 12px; }
+    .report-meta { font-size: 12px; color: var(--text-tertiary); display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .exec-band { background: linear-gradient(135deg, #0d4a2e 0%, var(--health-green) 100%);
+                 color: var(--cisco-white); border-radius: var(--radius-lg); padding: 24px 28px;
+                 margin-bottom: 32px; }
+    .exec-band h2 { font-size: 13px; font-weight: 700; text-transform: uppercase;
+                    letter-spacing: 0.1em; color: rgba(255,255,255,0.65); margin: 0 0 14px; }
+    .exec-findings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    @media (max-width: 720px) { .exec-findings { grid-template-columns: 1fr; } }
+    .exec-finding { background: rgba(255,255,255,0.10); border-radius: var(--radius-md);
+                    padding: 14px 16px; }
+    .exec-finding .label { font-size: 10px; font-weight: 700; text-transform: uppercase;
+                           letter-spacing: 0.08em; color: rgba(255,255,255,0.6); margin-bottom: 6px; }
+    .exec-finding .value { font-size: 15px; font-weight: 500; color: var(--cisco-white);
+                           line-height: 1.4; }
+    .exec-finding .value strong { color: #a8e6c3; }
+    .exec-finding .value em { font-style: normal; color: #ffd580; }
+
+    .analysis-section { margin-bottom: 40px; }
+    .section-number { display: inline-block; width: 28px; height: 28px; border-radius: 50%;
+                      background: var(--cisco-indigo); color: var(--cisco-white);
+                      font-size: 13px; font-weight: 700; line-height: 28px;
+                      text-align: center; margin-right: 10px; flex-shrink: 0; }
+    .section-title { display: flex; align-items: center; font-size: 20px; font-weight: 700;
+                     color: var(--cisco-indigo); margin: 0 0 16px; }
+    .section-title.health { color: var(--health-green); }
+    .section-title.health .section-number { background: var(--health-green); }
+
+    .insight { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+               border-radius: var(--radius-md); padding: 18px 20px; margin-bottom: 14px;
+               box-shadow: var(--shadow-card); }
+    .insight-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+    .insight-badge { display: inline-flex; align-items: center; padding: 2px 10px;
+                     font-size: 10px; font-weight: 700; border-radius: 999px;
+                     text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap;
+                     flex-shrink: 0; }
+    .badge-strength { background: var(--cisco-green-bg); color: var(--cisco-green-dark); }
+    .badge-risk     { background: var(--cisco-yellow-bg); color: var(--cisco-yellow-dark); }
+    .badge-critical { background: var(--cisco-red-bg); color: var(--cisco-red-dark); }
+    .badge-signal   { background: var(--cisco-info-bg); color: var(--cisco-indigo); }
+    .badge-data     { background: var(--cisco-gray-100); color: var(--cisco-gray-700); }
+    .badge-health   { background: var(--health-green-light); color: var(--health-green);
+                      border: 1px solid var(--health-green-border); }
+    .insight-title  { font-size: 15px; font-weight: 700; color: var(--text-primary); margin: 0; }
+    .insight-body   { font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; }
+    .insight-body p { margin-bottom: 8px; }
+    .insight-body p:last-child { margin-bottom: 0; }
+    .insight-body ul { margin-top: 6px; margin-bottom: 8px; }
+    .insight-data-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .data-chip { background: var(--cisco-gray-50); border: 1px solid var(--stroke-soft);
+                 border-radius: var(--radius-sm); padding: 4px 10px;
+                 font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+    .data-chip.green { background: var(--cisco-green-bg); border-color: transparent;
+                       color: var(--cisco-green-dark); }
+    .data-chip.yellow { background: var(--cisco-yellow-bg); border-color: transparent;
+                        color: var(--cisco-yellow-dark); }
+    .data-chip.red    { background: var(--cisco-red-bg); border-color: transparent;
+                        color: var(--cisco-red-dark); }
+    .data-chip.blue   { background: var(--cisco-info-bg); border-color: transparent;
+                        color: var(--cisco-indigo); }
+    .data-chip.health { background: var(--health-green-light); border-color: var(--health-green-border);
+                        color: var(--health-green); }
+
+    .grid { display: grid; gap: 12px; }
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 900px) {
+      .grid.cols-3, .grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 600px) {
+      .grid.cols-2, .grid.cols-3, .grid.cols-4 { grid-template-columns: 1fr; }
+    }
+
+    .stat { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+            border-left: 4px solid var(--cisco-indigo); border-radius: var(--radius-md);
+            padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
+            box-shadow: var(--shadow-card); }
+    .stat-value { font-size: 24px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
+                  letter-spacing: 0.06em; color: var(--text-secondary); line-height: 1.35; }
+    .stat[data-tone='success']  { border-left-color: var(--cisco-green); }
+    .stat[data-tone='success']  .stat-value { color: var(--cisco-green-dark); }
+    .stat[data-tone='warning']  { border-left-color: var(--cisco-yellow); }
+    .stat[data-tone='warning']  .stat-value { color: var(--cisco-yellow-dark); }
+    .stat[data-tone='danger']   { border-left-color: var(--cisco-red); }
+    .stat[data-tone='danger']   .stat-value { color: var(--cisco-red-dark); }
+    .stat[data-tone='info']     { border-left-color: var(--cisco-blue); }
+    .stat[data-tone='info']     .stat-value { color: var(--cisco-indigo); }
+    .stat[data-tone='health']   { border-left-color: var(--health-green); background: var(--health-green-light); }
+    .stat[data-tone='health']   .stat-value { color: var(--health-green); }
+
+    .table-wrap { border: 1px solid var(--stroke-soft); border-radius: var(--radius-md);
+                  overflow: auto; background: var(--bg-surface); margin-bottom: 16px; }
+    table.cisco-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cisco-table thead { background: var(--cisco-gray-50); }
+    .cisco-table th { font-weight: 700; font-size: 11px; text-transform: uppercase;
+                      letter-spacing: 0.06em; color: var(--cisco-indigo); padding: 10px 12px;
+                      text-align: left; border-bottom: 1px solid var(--stroke-soft); white-space: nowrap; }
+    .cisco-table td { padding: 9px 12px; border-bottom: 1px solid var(--stroke-faint); vertical-align: top; }
+    .cisco-table tbody tr:last-child td { border-bottom: 0; }
+    .cisco-table.striped tbody tr:nth-child(even) { background: var(--cisco-gray-50); }
+    .cisco-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .cisco-table tr[data-tone='success'] { background: var(--cisco-green-bg)  !important; }
+    .cisco-table tr[data-tone='warning'] { background: var(--cisco-yellow-bg) !important; }
+    .cisco-table tr[data-tone='danger']  { background: var(--cisco-red-bg)    !important; }
+    .cisco-table tr[data-tone='info']    { background: var(--cisco-info-bg)   !important; }
+    .cisco-table tr[data-tone='health']  { background: var(--health-green-light) !important; }
+
+    .chart-frame { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+                   border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 16px; }
+    .chart-frame .chart-canvas-wrap { position: relative; width: 100%; }
+
+    .callout { border: 1px solid var(--stroke-soft); border-left-width: 4px;
+               border-radius: var(--radius-md); padding: 14px 16px; background: var(--bg-surface);
+               display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .callout-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; }
+    .callout-body { color: var(--text-secondary); font-size: 13.5px; }
+    .callout[data-tone='success'] { border-left-color: var(--cisco-green); background: var(--cisco-green-bg); }
+    .callout[data-tone='success'] .callout-title { color: var(--cisco-green-dark); }
+    .callout[data-tone='warning'] { border-left-color: var(--cisco-yellow); background: var(--cisco-yellow-bg); }
+    .callout[data-tone='warning'] .callout-title { color: var(--cisco-yellow-dark); }
+    .callout[data-tone='danger']  { border-left-color: var(--cisco-red); background: var(--cisco-red-bg); }
+    .callout[data-tone='danger']  .callout-title { color: var(--cisco-red-dark); }
+    .callout[data-tone='info']    { border-left-color: var(--cisco-blue); background: var(--cisco-info-bg); }
+    .callout[data-tone='info']    .callout-title { color: var(--cisco-indigo); }
+
+    .divider { height: 1px; background: var(--stroke-faint); border: 0; margin: 24px 0; }
+
+    .reco-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--bg-surface);
+                  border: 1px solid var(--stroke-soft); border-radius: var(--radius-md); overflow: hidden; }
+    .reco-table th { background: var(--cisco-gray-50); font-size: 11px; font-weight: 700;
+                     text-transform: uppercase; letter-spacing: 0.06em; color: var(--cisco-indigo);
+                     padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--stroke-soft); }
+    .reco-table td { padding: 12px 14px; border-bottom: 1px solid var(--stroke-faint); vertical-align: top; }
+    .reco-table tbody tr:last-child td { border-bottom: 0; }
+    .priority-badge { display: inline-block; padding: 2px 8px; border-radius: 4px;
+                      font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+    .p1 { background: var(--cisco-red-bg); color: var(--cisco-red-dark); }
+    .p2 { background: var(--cisco-yellow-bg); color: var(--cisco-yellow-dark); }
+    .p3 { background: var(--cisco-info-bg); color: var(--cisco-indigo); }
+    .p4 { background: var(--cisco-green-bg); color: var(--cisco-green-dark); }
+
+    .footnote { font-size: 11.5px; color: var(--text-tertiary); line-height: 1.5; }
+
+    @media print {
+      .cisco-brandbar { background: white; color: black; }
+      .tabs { display: none; }
+      .page-shell { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cisco-brandbar" role="banner">
+    <div class="cisco-brandbar-inner">
+      <span class="cisco-logo" aria-label="Cisco">
+        <span class="cisco-logo-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+        cisco
+      </span>
+      <span class="cisco-brand-divider" aria-hidden="true"></span>
+      <span class="cisco-brand-title">Global Benefits &mdash; Employee Health Span Analysis</span>
+      <span class="cisco-brand-spacer"></span>
+      <span class="cisco-brand-meta">
+        <span style="background:rgba(26,124,74,0.25);color:#a8e6c3;border:1px solid rgba(168,230,195,0.3);padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;">Data Analysis</span>
+        <span>FY26 Q1 &middot; Aug 27, 2026</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+
+    <nav class="tabs" aria-label="Dashboard tabs">
+      <a class="tab" href="index.html">Overview</a>
+      <a class="tab" href="financials.html">Financials</a>
+      <a class="tab" href="adoption.html">Adoption</a>
+      <a class="tab" href="experience.html">Experience</a>
+      <a class="tab health-tab" href="employee_health.html">&#10084; Health Span</a>
+      <a class="tab health-tab is-active" href="health_analysis.html" aria-current="page">Health Analysis</a>
+      <a class="tab" href="dictionary.html">Dictionary</a>
+    </nav>
+
+    <div class="report-header">
+      <h1 class="report-title">Employee Health Span &mdash; Data Analysis Report</h1>
+      <p class="report-subtitle">A synthesis of available data signals on the health and wellbeing of Cisco&rsquo;s 85,639-person global workforce, with insights, risk flags, and prioritized recommendations.</p>
+      <div class="report-meta">
+        <span>Analysis based on: Optum YTD 2025 / Pulse Feb 2026 &middot; Wellthy T12 Mar 2026 &middot; RethinkCare Feb 2026</span>
+        <span>APJC Well-being FY25 &middot; MMB Q2 FY26 &middot; Mexico Clinic Mar 2026</span>
+        <span>Author: Global Benefits Insights team &middot; Dashboard build output</span>
+      </div>
+    </div>
+
+    <!-- Executive Summary Band -->
+    <div class="exec-band">
+      <h2>Executive Summary &mdash; 4 Key Findings</h2>
+      <div class="exec-findings">
+        <div class="exec-finding">
+          <div class="label">Finding 1 &mdash; Strength</div>
+          <div class="value">EAP utilization is <strong>58% above BoB benchmark</strong> (3.94% vs 2.5%). Employees who engage report <strong>23% reduction in absent days and stress</strong>. The program is working where employees use it.</div>
+        </div>
+        <div class="exec-finding">
+          <div class="label">Finding 2 &mdash; Risk Signal</div>
+          <div class="value">Q4 2025 EAP utilization hit an <em>8-quarter low (2.9%)</em>. While Q1 2026 has recovered, this downward trend needs active monitoring &mdash; it may signal stigma increase or access friction.</div>
+        </div>
+        <div class="exec-finding">
+          <div class="label">Finding 3 &mdash; Critical Gap</div>
+          <div class="value">Korea is the <em>only market globally</em> with <strong>NO mental health insurance coverage</strong>. Japan/Taiwan/Korea also show severely low vacation utilization (28-36%) signaling structural burnout risk.</div>
+        </div>
+        <div class="exec-finding">
+          <div class="label">Finding 4 &mdash; Cross-Region Pattern</div>
+          <div class="value">Financial stress (Taxation) is the <strong>#1 presenting EAP issue in both EMEA and LATAM</strong>. This is a systemic signal: mental health and financial health are deeply linked for a significant part of the global workforce.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 1: Program Effectiveness -->
+    <div class="analysis-section">
+      <div class="section-title health">
+        <span class="section-number">1</span>
+        EAP &amp; Mental Health Program Effectiveness
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-health">&#9733; Strength</span>
+          <h3 class="insight-title">EAP outcomes are genuinely strong &mdash; the data supports the program</h3>
+        </div>
+        <div class="insight-body">
+          <p>The Optum EAP delivers measurable outcomes: employees post-engagement show a 23% reduction in absenteeism, 23% improvement in stress, and 22.9% improvement in presenteeism. Concretely, that means <strong>1.8 fewer absent days and 2.3 more productive days per engaged employee</strong> following an EAP interaction.</p>
+          <p>At 3.94% Cisco-HC utilization (vs 2.5% BoB benchmark), Cisco is running 58% above the global benchmark. If the 1.8-day absenteeism reduction is applied to the 1,800 global EAP cases in 2025, that represents roughly <strong>3,240 working days recovered</strong> in a single year &mdash; a tangible business outcome from a relatively small program cost.</p>
+          <p>CSAT of 94.4% and 95.1% timely access rates indicate the delivery experience is strong, removing "bad experience" as a barrier to reuse. The 22.6% vendor engagement (vs 17.3% BoB) shows employees engage with the broader LiveWell platform, not just crisis counseling.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip green">3.94% util vs 2.5% BoB</span>
+          <span class="data-chip green">94.4% CSAT</span>
+          <span class="data-chip green">23% absenteeism reduction</span>
+          <span class="data-chip green">1.8 fewer absent days/EE</span>
+          <span class="data-chip green">22.6% engagement (vs 17.3% BoB)</span>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-risk">&#9888; Risk Signal</span>
+          <h3 class="insight-title">Q4 2025 utilization decline: seasonal or behavioral shift?</h3>
+        </div>
+        <div class="insight-body">
+          <p>Quarterly annualized utilization fell from 4.6% (Q1 2025) to 2.9% (Q4 2025) &mdash; a <strong>37% reduction within 12 months</strong> and the lowest of 8 trailing quarters. The YTD blended 3.8% remains above benchmark, but the Q4 individual quarter reading is concerning.</p>
+          <p>Three hypotheses merit investigation:</p>
+          <ul>
+            <li><strong>Seasonality:</strong> Q4 (Oct-Dec) is often quieter. Check prior years' Q4 patterns.</li>
+            <li><strong>Program awareness fatigue:</strong> Initial launch enthusiasm may have faded. Quarterly comms might need a refresh.</li>
+            <li><strong>Stigma increase:</strong> Macro factors (layoffs, uncertainty) sometimes paradoxically suppress help-seeking as employees fear being perceived as struggling. This is the most concerning hypothesis and requires qualitative follow-up.</li>
+          </ul>
+          <p>Q1 2026 Pulse data (Jan 4.7%, Feb 4.5%) suggests a recovery, which supports a seasonality explanation. However, the recovery should be confirmed through Q2 before the trend is marked as resolved.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip yellow">Q4 2025: 2.9% (8-qtr low)</span>
+          <span class="data-chip yellow">-37% QoQ decline within 2025</span>
+          <span class="data-chip green">Jan 2026: 4.7% (recovery)</span>
+          <span class="data-chip green">Feb 2026: 4.5%</span>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-signal">&#8505; Data Quality</span>
+          <h3 class="insight-title">EMEA&rsquo;s headline utilization is Portugal-driven &mdash; not broadly distributed</h3>
+        </div>
+        <div class="insight-body">
+          <p>EMEA reports 6.42% EAP utilization, the highest of any region. However, <strong>Portugal alone accounts for &gt;90% of all EMEA cases</strong> at 38.2% utilization (vs 4.2% Portugal BoB). This is almost certainly an onsite-clinic attribution effect, where clinic visits are coded as EAP cases.</p>
+          <p>Removing Portugal from the EMEA aggregate would likely put EMEA utilization at or below the 2.5% BoB benchmark. This matters because the EMEA headline number suggests a healthy demand signal that doesn&rsquo;t exist uniformly across the region. Program managers designing EMEA-wide EAP interventions should use country-level breakdowns, not the regional aggregate.</p>
+          <p>Similarly, Norway (16.2%), Australia (11.6%), and Israel (7.0%) all run significantly above their country benchmarks in Pulse data &mdash; suggesting pockets of genuine strong utilization distinct from the Portugal attribution effect.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip yellow">Portugal: 38.2% util (vs 4.2% BoB)</span>
+          <span class="data-chip blue">Norway: 16.2% (vs 7.9% BoB)</span>
+          <span class="data-chip blue">Australia: 11.6% (vs 2.9% BoB)</span>
+          <span class="data-chip yellow">EMEA ex-Portugal: likely at/below benchmark</span>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-risk">&#9888; Underperformance</span>
+          <h3 class="insight-title">Canada is the only region running below EAP benchmark</h3>
+        </div>
+        <div class="insight-body">
+          <p>Canada Cisco-HC utilization is 1.63% vs the 2.5% BoB benchmark &mdash; a 0.87pp gap on a population of 2,512 employees. With only 41 EAP cases in 2025, a small change in case volume would significantly move the number. The low absolute case count means variance is high, but the persistent below-benchmark reading is worth acting on.</p>
+          <p>Importantly, Canada&rsquo;s <strong>RethinkCare penetration is the highest of any region at 7.80%</strong>, demonstrating that Canadian employees are willing to engage with wellbeing programs. This rules out general engagement resistance and points instead to specific EAP awareness, access, or stigma issues. The top presenting issues (Anxious/Worry, Parenting) are consistent with the rest of the global population, so there is no obvious country-specific topic that might be driving employees elsewhere.</p>
+          <p>Recommendation: Joint Optum-Canada program review focused on referral pathways, manager awareness, and whether the Canada EWS (Employee Wellbeing Solution) variant has differentiated positioning from the US EAP.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip red">1.63% util vs 2.5% BoB (-0.87pp)</span>
+          <span class="data-chip green">7.80% RethinkCare (highest region)</span>
+          <span class="data-chip yellow">41 cases YTD (small n)</span>
+          <span class="data-chip blue">Top issue: Anxious/Worry (consistent globally)</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SECTION 2: Wellbeing Programs -->
+    <div class="analysis-section">
+      <div class="section-title health">
+        <span class="section-number">2</span>
+        Wellbeing Program Analysis (Wellthy &amp; RethinkCare)
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-health">&#9733; Growing</span>
+          <h3 class="insight-title">Wellthy engagement is growing but a key outcome metric has declined significantly</h3>
+        </div>
+        <div class="insight-body">
+          <p>Wellthy engagement has grown from 6.1% (2025 annual) to 6.9% (trailing 12mo ending Mar 2026). Engaged lives increased from 3,170 to 4,209 (+33%). Active care projects grew from 611 to 816 (+34%). Hours saved for US employees grew from 18,162 to 20,248. By engagement metrics, the program is scaling successfully.</p>
+          <p>However, the Q1 2026 outcome survey raises a flag: "More present at work" fell from 100% (Q4, n=29) to 33% (Q1, n=53). <strong>Critical caveat: the Q4 result was based on only 29 respondents and is statistically fragile</strong>. A 100% result from n=29 cannot be assumed to represent the population. The Q1 result (33% from n=53) is still small but directionally more trustworthy.</p>
+          <p>The most reliable metric trend is NPS: 93 (Q4) &rarr; 81 (Q1). A 12-point NPS drop is meaningful even at these sample sizes and should trigger a structured QBR conversation with Wellthy. The "less stressed" metric also slipped from 93% to 83% (-10pp). The caregiving support outcomes need continuous monitoring as the program scales to a larger, potentially more complex case mix.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip green">Engagement +33% YoY (3,170 → 4,209)</span>
+          <span class="data-chip green">Hours saved: 20,248 (US)</span>
+          <span class="data-chip yellow">NPS 93 → 81 (-12pts)</span>
+          <span class="data-chip red">"More present" 100% → 33% (small n)</span>
+          <span class="data-chip yellow">"Less stressed" 93% → 83% (-10pp)</span>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-health">&#9733; Strong Momentum</span>
+          <h3 class="insight-title">RethinkCare shows strong early trajectory; Canada leads penetration</h3>
+        </div>
+        <div class="insight-body">
+          <p>RethinkCare launched globally in August 2025 and has grown from 3,722 to 4,145 enrolled employees by February 2026 (+11.4% in 7 months). This represents 4.84% of Cisco&rsquo;s total global headcount as a cumulative reach figure, which is strong for a relatively new program.</p>
+          <p>Canada leads all regions at 7.80% penetration (196/2,512 EE), followed by LATAM (5.61%), US (5.52%), EMEA (4.30%), and APJC (4.28%). The inverse relationship between Canada&rsquo;s EAP underperformance and RethinkCare overperformance suggests Canadian employees may prefer self-directed digital wellness tools over structured counseling. This is an important design insight: program mix (EAP vs digital tools) should be calibrated by region, not applied uniformly.</p>
+          <p>At country level, New Zealand leads APJC at 17.9% penetration (albeit on a very small base of 56 employees). UK (6.3%), Australia (6.2%), Canada (7.8%), and Costa Rica (6.4%) are the strongest country performers. India, despite being the largest APJC market (15,898 EE), is at 3.5% &mdash; below the APJC average, suggesting a potential opportunity for targeted outreach.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip health">4.84% global reach after 7 months</span>
+          <span class="data-chip health">Canada: 7.80% (leading region)</span>
+          <span class="data-chip blue">US: 5.52% (2,207 enrolled)</span>
+          <span class="data-chip blue">India: 3.5% (opportunity market)</span>
+          <span class="data-chip green">+422 enrolled since August 2025</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SECTION 3: Burnout & Mental Health Risk -->
+    <div class="analysis-section">
+      <div class="section-title" style="color: var(--cisco-red-dark);">
+        <span class="section-number" style="background: var(--cisco-red-dark);">3</span>
+        Burnout Risk &amp; Mental Health Coverage Gaps
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-critical">&#128679; Critical Gap</span>
+          <h3 class="insight-title">Korea: Mental health insurance exclusion is a structural equity gap</h3>
+        </div>
+        <div class="insight-body">
+          <p>Korea is the only country across Cisco&rsquo;s 14 APJC markets &mdash; and likely the only country globally &mdash; where mental health is explicitly excluded from insurance coverage. 297 Korean employees have no insurance protection for mental health treatment costs. Korea also has the only missing wellbeing satisfaction score (N/A in source), which may indicate measurement gaps alongside coverage gaps.</p>
+          <p>This is not just a benefits equity issue; it creates a structural conflict with Cisco&rsquo;s global Conscious Culture commitments. Mental health insurance exclusions are increasingly uncommon in the Korean market as the country has expanded coverage &mdash; Cisco should be at or above local market practice, not below it.</p>
+          <p>Korea also has 36% vacation utilization, placing it in the &ldquo;high burnout risk&rdquo; cluster (28-36% range with Japan and Taiwan). The combination of no mental health coverage + low vacation utilization is a particularly high-risk configuration.</p>
+          <p>Action: Escalate to APJC Benefits Director for FY27 plan renewal agenda. Obtain broker recommendation on adding mental health coverage. Target: mental health explicitly included by FY27.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip red">Only country with NO MH coverage</span>
+          <span class="data-chip red">297 employees affected</span>
+          <span class="data-chip yellow">36% vacation utilization</span>
+          <span class="data-chip yellow">Wellbeing satisfaction: N/A</span>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-risk">&#9888; Burnout Cluster</span>
+          <h3 class="insight-title">Japan/Taiwan/Korea vacation utilization signals cultural burnout risk at scale</h3>
+        </div>
+        <div class="insight-body">
+          <p>Japan (28%), Taiwan (30%), and Korea (36%) vacation utilization are the three lowest in APJC. Globally, these would rank as extreme outliers &mdash; most Cisco markets utilize 65-79% of vacation entitlement. For Japan specifically, this affects 1,453 employees and sick leave data is unavailable in the source system, meaning there is no offsetting signal to reassure that these employees are taking time to recover.</p>
+          <p>A paradox worth noting: Japan&rsquo;s wellbeing satisfaction score is 9.5/10 (the highest alongside GC). This dissociation between low vacation utilization and high satisfaction is a classic pattern in high-context work cultures where employees report high satisfaction due to social desirability bias, even when objective indicators (leave utilization) suggest stress. HR should validate satisfaction data collection methodology for Japan and Korea.</p>
+          <p>For Taiwan, no wellbeing satisfaction data was available, and the country also shows 22.8% sick leave utilization &mdash; lower than might be expected in a high-stress environment, which may reflect under-reporting. Pre-existing condition exclusions in Taiwan&rsquo;s insurance plan create an additional barrier if employees develop chronic health conditions from prolonged stress.</p>
+          <p>Recommended action: Design manager enablement campaigns in JP/TW/KR specifically focused on &ldquo;psychological safety to take leave.&rdquo; Track vacation utilization quarterly as a health span leading indicator.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip red">Japan: 28% vacation (1,453 EE)</span>
+          <span class="data-chip red">Taiwan: 30% vacation</span>
+          <span class="data-chip yellow">Korea: 36% vacation</span>
+          <span class="data-chip yellow">Japan satisfaction 9.5/10 (paradox)</span>
+          <span class="data-chip blue">India sick leave: 70.9% (different issue)</span>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-risk">&#9888; Elevated but Different</span>
+          <h3 class="insight-title">India 71% sick leave utilization: illness burden or reporting artifact?</h3>
+        </div>
+        <div class="insight-body">
+          <p>India shows 70.9% sick leave utilization across its 15,898 employees &mdash; far above every other APJC country (most range 25-50%). India also has an insurance claim ratio of 74% (11,940 claimants / HC), which is separately verified data. These two data points together suggest genuine elevated illness burden, not purely a reporting artifact.</p>
+          <p>India also has pre-existing condition exclusions in its insurance plan and 32.2% health checkup participation (below China&rsquo;s 77% and Japan&rsquo;s 69% despite India being the largest APJC market). The combination &mdash; high sick leave, high claim ratio, pre-existing exclusions, below-average preventive care participation &mdash; suggests a population with real health challenges and potentially insufficient preventive infrastructure.</p>
+          <p>India&rsquo;s wellbeing satisfaction of 8.9/10 is solid but the lowest of the scored markets, which is directionally consistent with the illness burden signals. EAP utilization for India is reported at 1.9% via Pulse YTD (low) but India has historically been a hard market to drive EAP utilization due to stigma. RethinkCare penetration is 3.5% (below APJC average of 4.28%), suggesting engagement with wellbeing platforms may also lag.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip yellow">71% sick leave utilization</span>
+          <span class="data-chip yellow">74% insurance claim ratio</span>
+          <span class="data-chip yellow">32.2% health checkup (below region avg)</span>
+          <span class="data-chip yellow">Pre-existing exclusion in plan</span>
+          <span class="data-chip blue">8.9/10 wellbeing satisfaction</span>
+          <span class="data-chip blue">3.5% RethinkCare (below APJC avg)</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SECTION 4: Financial Stress as Health Signal -->
+    <div class="analysis-section">
+      <div class="section-title">
+        <span class="section-number">4</span>
+        Financial Stress as a Primary Health Driver
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-signal">&#8505; Cross-Region Pattern</span>
+          <h3 class="insight-title">Taxation / financial stress is the #1 EAP presenting issue in EMEA &amp; LATAM</h3>
+        </div>
+        <div class="insight-body">
+          <p>In both EMEA and LATAM, &ldquo;Taxation&rdquo; is the top presenting issue in EAP cases &mdash; ahead of anxiety, relationship issues, and other traditionally dominant mental health topics. This is a significant departure from the global (non-US) pattern where Anxious/Worry dominates. The pattern is consistent across two geographically and culturally distinct regions, which strengthens the signal considerably.</p>
+          <p>In February 2026 global Pulse data, Taxation entered the global top-3 as well, suggesting this is becoming a broader trend. The implication: for a meaningful segment of Cisco&rsquo;s global workforce, <strong>financial anxiety is the primary mental health stressor</strong> &mdash; and it is being routed through the EAP rather than a financial wellness tool.</p>
+          <p>Cisco currently offers Wellthy (caregiving/family financial navigation), BrightPlan (financial wellness for US), and financial coaching components in some markets. However, these programs appear to be receiving less routing of financial stress than the EAP. This suggests either: (a) employees are unaware of financial wellness tools and default to EAP, (b) the tax/financial issues are complex enough to require EAP-level support, or (c) employees prefer the privacy of EAP for financial discussions. All three have different program design implications.</p>
+          <p>Recommendation: Work with EAP vendor to add a &ldquo;warm handoff&rdquo; protocol for tax/financial presenting issues to financial coaching tools. Track if this changes the presenting issue mix in subsequent quarters.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip yellow">EMEA #1 issue: Taxation</span>
+          <span class="data-chip yellow">LATAM #1 issue: Taxation</span>
+          <span class="data-chip yellow">Feb 2026 global top-3: Taxation (new entry)</span>
+          <span class="data-chip blue">EMEA financial coaching: BrightPlan/Wellthy underutilized</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SECTION 5: Preventive Health -->
+    <div class="analysis-section">
+      <div class="section-title health">
+        <span class="section-number">5</span>
+        Preventive Health &amp; Early Intervention
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-health">&#9733; Strong</span>
+          <h3 class="insight-title">APJC preventive care participation is mixed but improving; Korea and Japan lead</h3>
+        </div>
+        <div class="insight-body">
+          <p>7 of 14 APJC markets achieve &ge;50% health checkup participation. Korea (100%) and Japan (69%) are the standouts, though both are driven at least partly by statutory mandates. China (77%) and Taiwan (65%) also show strong checkup participation despite not being statutory.</p>
+          <p>Vaccination participation is more varied. Japan stands out with 72.7% vaccination (likely COVID booster programs in the data period). Thailand (48.3%), Vietnam (31.1%), Korea (46.4%), and Hong Kong (16%) follow. Singapore is the only country with a &ldquo;Below benchmark&rdquo; grade for vaccination, suggesting a specific gap for 702 employees.</p>
+          <p>Australia and New Zealand use insurer-funded preventive care, which may explain lower direct participation numbers (6.2% and 0% respectively for checkups, despite likely higher actual participation via the insurer). The framework for measuring preventive care in these markets should be clarified to avoid understating participation.</p>
+          <p>India&rsquo;s 32.2% checkup participation across 15,898 employees (the largest APJC market) represents a significant leverage point. If India&rsquo;s checkup participation could be increased to China&rsquo;s level (77%), approximately 7,000 additional employees would receive annual preventive care &mdash; with potential to identify and address chronic conditions earlier.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip health">7/14 markets at ≥50% checkup</span>
+          <span class="data-chip green">Korea: 100% (statutory)</span>
+          <span class="data-chip green">Japan: 69% checkup, 72.7% vaccination</span>
+          <span class="data-chip yellow">India: 32.2% checkup (opportunity: +7K EE)</span>
+          <span class="data-chip red">Singapore: Below benchmark (vaccination)</span>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-health">&#9733; LATAM Clinic</span>
+          <h3 class="insight-title">Mexico Onsite Clinic delivers zero-escalation primary care with strong campaign reach</h3>
+        </div>
+        <div class="insight-body">
+          <p>The Mexico onsite clinic at two Cisco campuses served 33 employees in March 2026 with zero escalations, indicating effective triage and primary care delivery. The top diagnoses include a mix of routine (health check-up, pharyngitis) and concerning (cardiovascular: 3 cases, gastro: 8 cases) patterns.</p>
+          <p>Notably, <strong>cardiovascular disorders appearing in 3 of 33 visits (9%)</strong> in a single month is a higher proportion than might be expected for a typical primary care population in the 21-40 dominant age cohort. While n is small, this is worth tracking over 6+ months to see if it reflects a structural health trend.</p>
+          <p>The health promotion campaigns are high-leverage: vaccination education (89 attendees) and maternal &amp; child health (79 beneficiaries) reached far more employees than the direct clinic visits, demonstrating the clinic&rsquo;s value as a health communication hub beyond direct care. The gastro disorder recommendation (hand sanitizer placement at cafeterias) is an example of the clinic providing public health insights from individual case patterns.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip health">33 visits, 0 escalations</span>
+          <span class="data-chip yellow">Cardiovascular: 3 of 33 (9%) — monitor</span>
+          <span class="data-chip green">Vaccination education: 89 attendees</span>
+          <span class="data-chip green">Maternal/child health: 79 beneficiaries</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SECTION 6: Investment Analysis -->
+    <div class="analysis-section">
+      <div class="section-title">
+        <span class="section-number">6</span>
+        Health Investment Concentration &amp; ROI Signal
+      </div>
+
+      <div class="insight">
+        <div class="insight-head">
+          <span class="insight-badge badge-signal">&#8505; Structural</span>
+          <h3 class="insight-title">Wellbeing &amp; mental health is &lt;2.5% of total health spend but delivers outsized ROI signals</h3>
+        </div>
+        <div class="insight-body">
+          <p>FY26 plan allocation to Wellbeing &amp; Mental Health: $19.6M. Work/Life (EAP, caregiving, family): $18.4M. Combined &ldquo;health beyond physical&rdquo; spend: approximately $38M. Total global health-related spend (Medical/Health + Insurance + Wellbeing + Work/Life) is approximately $875M. Wellbeing &amp; mental health therefore represents approximately <strong>4.3% of total health-related spend</strong>.</p>
+          <p>Against this, the EAP program alone produces a documented 23% absenteeism reduction per engaged employee. If we conservatively value a recovered absent day at 1 day&rsquo;s compensation (using $49,565/year US average ≈ $191/day), the 3,240 recovered absent days from 1,800 EAP cases yield approximately <strong>$619,440 in productivity value</strong> &mdash; just from absenteeism, just in 2025, not including presenteeism improvements, turnover impact, or multi-year effects.</p>
+          <p>This back-of-envelope analysis is conservative and incomplete, but it suggests the wellbeing program cluster is producing positive return on investment. The programs most likely to have the highest ROI are those that address the highest-utilization, most-impactful issues: EAP (high utilization, direct productivity outcomes), Wellthy (caregiving reduces unplanned absence), and RethinkCare (mental resilience building at scale).</p>
+          <p>The US Onsite Health &amp; Clinic category ($16.9M) is the only region with this spend and likely delivers significant ROI through early intervention and reduced ER utilization, but outcome data is not currently in the dashboard. Adding clinic utilization and case outcome data for the US onsite program would strengthen the ROI narrative.</p>
+        </div>
+        <div class="insight-data-row">
+          <span class="data-chip blue">Wellbeing + MH spend: $19.6M</span>
+          <span class="data-chip blue">Work/Life spend: $18.4M</span>
+          <span class="data-chip blue">Combined: ~4.3% of health-related spend</span>
+          <span class="data-chip health">Est. productivity value: $619K+ (EAP only, conservative)</span>
+          <span class="data-chip green">US Onsite Clinic: $16.9M (no outcome data yet)</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SECTION 7: Data Quality -->
+    <div class="analysis-section">
+      <div class="section-title">
+        <span class="section-number">7</span>
+        Data Quality &amp; Measurement Gaps
+      </div>
+
+      <div class="callout" data-tone="warning">
+        <h3 class="callout-title">Key measurement gaps that limit health span analysis</h3>
+        <div class="callout-body">
+          <ul style="margin-top:6px;">
+            <li><strong>US EAP utilization:</strong> The US is served by a separate UBH/Optum US program. US-specific EAP utilization, CSAT, and presenting issues are not in the current dashboard. With 39,963 US employees (46.7% of global HC), this is the largest data gap in health span measurement.</li>
+            <li><strong>Wellthy outcome sample sizes:</strong> Q4 2025 n=29 and Q1 2026 n=53 are too small for reliable population inference. Request Wellthy to implement always-on outcome tracking vs. quarterly surveys to build statistically meaningful samples.</li>
+            <li><strong>Japan sick leave data:</strong> Marked as N/A in source. With 1,453 employees and 28% vacation utilization, Japan is a high-priority burnout risk market without a key health indicator.</li>
+            <li><strong>APJC mental health coverage for Korea:</strong> No utilization or satisfaction data for Korea wellbeing exists, limiting understanding of the real impact of the coverage gap.</li>
+            <li><strong>Financial wellness program utilization:</strong> BrightPlan, Wellthy financial coaching, and other financial wellness tools are not tracked in the adoption dashboard, making it impossible to assess whether they are addressing the financial stress signal in EMEA/LATAM.</li>
+            <li><strong>US Onsite Health &amp; Clinic outcomes:</strong> $16.9M spend with no utilization or outcome data in the dashboard.</li>
+            <li><strong>APJC EAP by sub-region:</strong> Only aggregate APJC data available; India (15,898 EE) vs Japan (1,453 EE) utilization patterns are not separately reported.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SECTION 8: Recommendations -->
+    <div class="analysis-section">
+      <div class="section-title health">
+        <span class="section-number">8</span>
+        Prioritized Recommendations
+      </div>
+
+      <div class="table-wrap">
+        <table class="reco-table">
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Region / Scope</th>
+              <th>Recommendation</th>
+              <th>Metric to Track</th>
+              <th>Target Timeline</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-tone="danger">
+              <td><span class="priority-badge p1">P1 Critical</span></td>
+              <td>APJC &mdash; Korea</td>
+              <td><strong>Add mental health insurance coverage for 297 Korean employees.</strong> Korea is the only Cisco market globally with an explicit MH exclusion. Engage local insurer via APJC broker for FY27 plan design. This is a benefits equity priority and aligns with Conscious Culture commitments.</td>
+              <td>Mental health coverage: Y (from N)</td>
+              <td>FY27 renewal (Q3 FY26 action)</td>
+            </tr>
+            <tr data-tone="warning">
+              <td><span class="priority-badge p2">P2 High</span></td>
+              <td>APJC &mdash; Japan, Taiwan, Korea</td>
+              <td><strong>Launch &ldquo;Right to Rest&rdquo; manager enablement for low-vacation markets.</strong> Partner with local HR teams on a manager campaign emphasizing psychological safety to take leave. Set a vacation utilization target of 60%+ for these markets within 24 months.</td>
+              <td>Vacation utilization % (quarterly)</td>
+              <td>Q3 FY26 pilot, FY27 full rollout</td>
+            </tr>
+            <tr data-tone="warning">
+              <td><span class="priority-badge p2">P2 High</span></td>
+              <td>EMEA &amp; LATAM (Global)</td>
+              <td><strong>Build a financial wellness warm-handoff protocol from EAP to financial coaching tools.</strong> Taxation is the #1 EAP presenting issue in both regions. Add a structured referral pathway from Optum to BrightPlan/Wellthy financial concierge, and track if presenting issue mix shifts over 2 quarters.</td>
+              <td>Taxation as % of presenting issues; Financial coaching utilization</td>
+              <td>Q2 FY26 (immediate)</td>
+            </tr>
+            <tr data-tone="warning">
+              <td><span class="priority-badge p2">P2 High</span></td>
+              <td>Americas &mdash; Canada</td>
+              <td><strong>Joint Optum-Canada access review.</strong> Canada is the only region below EAP benchmark (1.63% vs 2.5%). Given strong RethinkCare penetration (7.80%), the barrier is likely specific to EAP routing, not general wellbeing engagement. Review referral pathways, manager awareness, and Canada EWS positioning.</td>
+              <td>Canada EAP util (target: &ge;2.5%)</td>
+              <td>Q2 FY26 review, Q3 FY26 action</td>
+            </tr>
+            <tr>
+              <td><span class="priority-badge p3">P3 Important</span></td>
+              <td>Global &mdash; Wellthy</td>
+              <td><strong>Request Q2 2026 Wellthy outcome survey to validate Q1 2026 NPS decline.</strong> NPS 93&rarr;81 and "present at work" 100%&rarr;33% from small samples needs larger n confirmation. If the decline holds at n&ge;200, schedule vendor accountability QBR with root cause analysis and improvement plan.</td>
+              <td>Wellthy NPS; "More present" %; survey n</td>
+              <td>Q2 FY26 data collection</td>
+            </tr>
+            <tr>
+              <td><span class="priority-badge p3">P3 Important</span></td>
+              <td>APJC &mdash; India</td>
+              <td><strong>Expand preventive care program in India.</strong> With 15,898 employees at 32.2% health checkup participation (vs 77% in China), there is a significant opportunity to improve early detection. Partner with local health insurer on an enhanced checkup campaign targeting 50%+ participation. Track claim ratio trajectory as a health outcome proxy.</td>
+              <td>India checkup participation (target: 50%)</td>
+              <td>FY27 plan cycle</td>
+            </tr>
+            <tr>
+              <td><span class="priority-badge p3">P3 Important</span></td>
+              <td>Global &mdash; EAP Trend</td>
+              <td><strong>Monitor Q4 2025 utilization decline with a structured Q2 2026 checkpoint.</strong> If Q2 2026 returns to 4%+ levels, classify as seasonal. If Q2 2026 falls below 3.5% again, escalate to a formal program review focused on awareness refresh and stigma-reduction communications.</td>
+              <td>Q2 2026 EAP quarterly util</td>
+              <td>Q2 FY26 data point</td>
+            </tr>
+            <tr>
+              <td><span class="priority-badge p4">P4 Opportunity</span></td>
+              <td>Global</td>
+              <td><strong>Add US EAP data to the health span dashboard.</strong> US carries 46.7% of global HC but US EAP utilization is in a separate program not tracked here. Adding US Optum EAP data would complete the global picture and is the single largest data gap for health span measurement.</td>
+              <td>US EAP utilization% added to dashboard</td>
+              <td>Next dashboard refresh</td>
+            </tr>
+            <tr>
+              <td><span class="priority-badge p4">P4 Opportunity</span></td>
+              <td>APJC &mdash; Singapore</td>
+              <td><strong>Investigate Singapore vaccination gap.</strong> Singapore is the only &ldquo;Below benchmark&rdquo; market for vaccination. With 702 employees and an otherwise solid benefit infrastructure, this should be an accessible quick win via a targeted vaccination campaign or employer-sponsored vaccination event.</td>
+              <td>Singapore vaccination % (target: benchmark)</td>
+              <td>Q3 FY26</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Summary scorecard -->
+    <div class="analysis-section">
+      <div class="section-title">
+        <span class="section-number" style="background: var(--cisco-gray-700);">&#9;</span>
+        Health Span Scorecard &mdash; FY26 Q1
+      </div>
+
+      <div class="grid cols-4" style="gap:12px; margin-bottom:20px;">
+        <div class="stat" data-tone="success">
+          <div class="stat-value">&#9733; Strong</div>
+          <div class="stat-label">EAP utilization vs benchmark (global)</div>
+        </div>
+        <div class="stat" data-tone="success">
+          <div class="stat-value">&#9733; Strong</div>
+          <div class="stat-label">EAP quality outcomes (CSAT, absenteeism)</div>
+        </div>
+        <div class="stat" data-tone="warning">
+          <div class="stat-value">&#9888; Monitor</div>
+          <div class="stat-label">EAP quarterly trend (Q4 dip)</div>
+        </div>
+        <div class="stat" data-tone="warning">
+          <div class="stat-value">&#9888; Monitor</div>
+          <div class="stat-label">Wellthy NPS trend</div>
+        </div>
+        <div class="stat" data-tone="success">
+          <div class="stat-value">&#9733; Growing</div>
+          <div class="stat-label">RethinkCare enrollment momentum</div>
+        </div>
+        <div class="stat" data-tone="warning">
+          <div class="stat-value">&#9888; Risk</div>
+          <div class="stat-label">Japan/Taiwan/Korea vacation utilization</div>
+        </div>
+        <div class="stat" data-tone="danger">
+          <div class="stat-value">&#9940; Gap</div>
+          <div class="stat-label">Korea mental health insurance coverage</div>
+        </div>
+        <div class="stat" data-tone="warning">
+          <div class="stat-value">&#9888; Risk</div>
+          <div class="stat-label">Canada EAP below benchmark</div>
+        </div>
+      </div>
+
+      <div class="chart-frame">
+        <div class="text-small" style="color:var(--text-secondary); margin-bottom:6px;">
+          EAP utilization by region vs benchmark &mdash; scorecard view
+        </div>
+        <div class="chart-canvas-wrap" style="height:260px;">
+          <canvas id="chart-scorecard"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <p class="footnote">
+      Data sources: Optum Americas/Canada/APJC/EMEA/LATAM QBRs (YTD 2025); Optum Pulse Feb 2026 report;
+      Wellthy 2025 Annual + Trailing 12mo March 2026 utilization report; RethinkCare Dashboard Feb 2026;
+      APJC Measurement &amp; Metrics data collection (Well-being, Time-off, Insurance, Preventive Health xlsx);
+      Mexico Onsite Clinic report March 2026; MMB Q2 FY26 QBR; Cisco Headcount snapshot May 2026 (85,639 EE).
+      Analysis by Global Benefits Insights team. See <a href="employee_health.html">Health Span Dashboard</a> for
+      underlying data visualizations. Return to <a href="index.html">Overview Dashboard</a>.
+    </p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
+  <script src="assets/charts.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      CiscoChart.bar('chart-scorecard',
+        ['Global (non-US)', 'Canada', 'APJC', 'EMEA*', 'LATAM'],
+        [
+          { name: 'Cisco-HC utilization', data: [3.94, 1.63, 2.30, 6.42, 5.35], tone: 'primary' },
+          { name: 'Optum BoB benchmark',  data: [2.50, 2.50, 2.50, 2.50, 2.50], tone: 'warning' }
+        ],
+        { valueFormat: 'percent', height: 260 }
+      );
+    })();
+  </script>
+</body>
+</html>

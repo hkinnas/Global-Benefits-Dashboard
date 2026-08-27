@@ -1,0 +1,1185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Employee Health Span &middot; Cisco Global Benefits Dashboard</title>
+  <meta name="description" content="Employee Health Span dashboard - global vs regional breakdown of employee wellbeing, EAP utilization, mental health programs, burnout signals, and preventive care." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <style>
+    /* ========================================================================
+       Cisco Global Benefits Dashboard - inline brand stylesheet.
+       Cisco Blue #00BCEB / Indigo #005073, Cisco Green / Yellow / Red status
+       palette, CiscoSans with Inter / system-sans fallback.
+       ====================================================================== */
+    :root {
+      --cisco-blue: #00bceb;
+      --cisco-blue-700: #049fd9;
+      --cisco-indigo: #005073;
+      --cisco-indigo-900: #00374f;
+      --cisco-black: #1d1d1d;
+      --cisco-gray-900: #39393b;
+      --cisco-gray-700: #58585b;
+      --cisco-gray-500: #6e6e73;
+      --cisco-gray-300: #c6c7ca;
+      --cisco-gray-200: #dedede;
+      --cisco-gray-100: #ebebeb;
+      --cisco-gray-50:  #f7f7f8;
+      --cisco-white: #ffffff;
+      --cisco-green: #6abf4b;
+      --cisco-green-dark: #4a8a35;
+      --cisco-green-bg: rgba(106, 191, 75, 0.12);
+      --cisco-yellow: #fbab18;
+      --cisco-yellow-dark: #b87b0a;
+      --cisco-yellow-bg: rgba(251, 171, 24, 0.14);
+      --cisco-red: #e2231a;
+      --cisco-red-dark: #a71811;
+      --cisco-red-bg: rgba(226, 35, 26, 0.10);
+      --cisco-info: var(--cisco-indigo);
+      --cisco-info-bg: rgba(0, 80, 115, 0.08);
+      --bg-page: #f7f8fa;
+      --bg-surface: #ffffff;
+      --bg-elevated: #ffffff;
+      --bg-soft: var(--cisco-gray-50);
+      --text-primary: var(--cisco-black);
+      --text-secondary: var(--cisco-gray-700);
+      --text-tertiary: var(--cisco-gray-500);
+      --text-quaternary: #98989c;
+      --stroke-strong: var(--cisco-gray-300);
+      --stroke-soft: var(--cisco-gray-200);
+      --stroke-faint: var(--cisco-gray-100);
+      --accent: var(--cisco-indigo);
+      --accent-soft: var(--cisco-info-bg);
+      --radius-xs: 3px; --radius-sm: 4px; --radius-md: 6px; --radius-lg: 10px;
+      --shadow-card: 0 1px 2px rgba(0, 55, 79, 0.05), 0 1px 3px rgba(0, 55, 79, 0.04);
+      --shadow-elevated: 0 4px 12px rgba(0, 55, 79, 0.08);
+      --font-sans: 'CiscoSans', 'CiscoSansTT', Inter, -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+      /* Health span accent */
+      --health-green: #1a7c4a;
+      --health-green-light: rgba(26, 124, 74, 0.10);
+      --health-green-border: rgba(26, 124, 74, 0.30);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; background: var(--bg-page); color: var(--text-primary);
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.45;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--cisco-indigo); text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 120ms ease, color 120ms ease; }
+    a:hover { color: var(--cisco-blue-700); border-bottom-color: currentColor; }
+    p { margin: 0; }
+    ul { margin: 0; padding-left: 18px; }
+
+    .cisco-brandbar { background: var(--cisco-black); color: var(--cisco-white);
+                      border-bottom: 4px solid var(--cisco-blue); }
+    .cisco-brandbar-inner { max-width: 1320px; margin: 0 auto; padding: 14px 32px;
+                            display: flex; align-items: center; gap: 16px; }
+    .cisco-logo { font-family: var(--font-sans); font-weight: 700; font-size: 22px;
+                  letter-spacing: -0.01em; color: var(--cisco-white);
+                  display: inline-flex; align-items: center; gap: 10px; }
+    .cisco-logo-mark { width: 28px; height: 18px; display: inline-flex;
+                       align-items: flex-end; gap: 2px; }
+    .cisco-logo-mark span { display: inline-block; width: 3px;
+                            background: var(--cisco-blue); border-radius: 1px; }
+    .cisco-logo-mark span:nth-child(1) { height: 35%; }
+    .cisco-logo-mark span:nth-child(2) { height: 70%; }
+    .cisco-logo-mark span:nth-child(3) { height: 100%; }
+    .cisco-logo-mark span:nth-child(4) { height: 70%; }
+    .cisco-logo-mark span:nth-child(5) { height: 35%; }
+    .cisco-brand-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.25); }
+    .cisco-brand-title { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .cisco-brand-spacer { flex: 1 1 auto; }
+    .cisco-brand-meta { display: inline-flex; align-items: center; gap: 10px;
+                        font-size: 12px; color: rgba(255,255,255,0.7); }
+
+    .page-shell { max-width: 1320px; margin: 0 auto; padding: 28px 32px 80px; }
+    .page-header { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .page-title { font-size: 28px; font-weight: 700; line-height: 1.15;
+                  letter-spacing: -0.015em; color: var(--cisco-indigo); margin: 0; }
+    .page-subtitle { font-size: 14px; color: var(--text-secondary); margin: 0; }
+    .page-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+                 font-size: 12px; color: var(--text-tertiary); }
+
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--stroke-soft);
+            margin-bottom: 24px; flex-wrap: wrap; }
+    .tab { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
+           font-size: 14px; font-weight: 500; color: var(--text-secondary);
+           text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -2px;
+           transition: color 120ms ease, border-color 120ms ease, background 120ms ease; }
+    .tab:hover { color: var(--cisco-indigo); border-bottom: none; }
+    .tab.is-active { color: var(--cisco-indigo); border-bottom-color: var(--cisco-blue);
+                     font-weight: 600; }
+    .tab.health-tab { color: var(--health-green); }
+    .tab.health-tab.is-active { border-bottom-color: var(--health-green); }
+    .tab.health-tab:hover { color: var(--health-green); }
+
+    .h1 { font-size: 24px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em;
+          color: var(--cisco-indigo); margin: 0; }
+    .h2 { font-size: 18px; font-weight: 600; line-height: 1.3; margin: 8px 0 0;
+          color: var(--text-primary); }
+    .h3 { font-size: 12px; font-weight: 600; text-transform: uppercase;
+          letter-spacing: 0.06em; color: var(--text-secondary); margin: 0; }
+    .health-section-label { display: flex; align-items: center; gap: 10px; margin: 0 0 4px;
+                            font-size: 11px; font-weight: 700; text-transform: uppercase;
+                            letter-spacing: 0.08em; color: var(--health-green); }
+    .health-section-label::after { content: ''; flex: 1; height: 1px;
+                                   background: var(--health-green-border); }
+    .region-section-label { display: flex; align-items: center; gap: 10px; margin: 0 0 4px;
+                             font-size: 11px; font-weight: 700; text-transform: uppercase;
+                             letter-spacing: 0.08em; color: var(--cisco-indigo); }
+    .region-section-label::after { content: ''; flex: 1; height: 1px;
+                                    background: var(--cisco-info-bg); border-top: 1px solid var(--stroke-soft); }
+    .text-secondary { color: var(--text-secondary); }
+    .text-tertiary  { color: var(--text-tertiary); }
+    .text-small     { font-size: 12px; }
+    .text-bold      { font-weight: 700; }
+    .text-semibold  { font-weight: 600; }
+
+    .stack { display: flex; flex-direction: column; }
+    .stack > * + * { margin-top: var(--gap, 16px); }
+    .stack.gap-6  { --gap: 6px; }
+    .stack.gap-8  { --gap: 8px; }
+    .stack.gap-12 { --gap: 12px; }
+    .stack.gap-16 { --gap: 16px; }
+    .stack.gap-20 { --gap: 20px; }
+    .stack.gap-24 { --gap: 24px; }
+    .row { display: flex; flex-direction: row; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .row.gap-6  { gap: 6px; } .row.gap-8  { gap: 8px; } .row.gap-12 { gap: 12px; }
+    .row.gap-16 { gap: 16px; } .row.gap-24 { gap: 24px; }
+    .spacer { flex: 1 1 auto; }
+    .grid { display: grid; gap: 12px; }
+    .grid.gap-16 { gap: 16px; }
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid.cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .grid.cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    @media (max-width: 1100px) {
+      .grid.cols-5, .grid.cols-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .grid.cols-2, .grid.cols-3, .grid.cols-4, .grid.cols-5, .grid.cols-6 { grid-template-columns: 1fr; }
+    }
+    .divider { height: 1px; background: var(--stroke-faint); border: 0; margin: 0; }
+
+    .stat { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+            border-left: 4px solid var(--cisco-indigo); border-radius: var(--radius-md);
+            padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
+            box-shadow: var(--shadow-card); }
+    .stat-value { font-size: 24px; font-weight: 700; line-height: 1.1;
+                  color: var(--text-primary); letter-spacing: -0.01em; }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
+                  letter-spacing: 0.06em; color: var(--text-secondary); line-height: 1.35; }
+    .stat[data-tone='success']  { border-left-color: var(--cisco-green); }
+    .stat[data-tone='success']  .stat-value { color: var(--cisco-green-dark); }
+    .stat[data-tone='warning']  { border-left-color: var(--cisco-yellow); }
+    .stat[data-tone='warning']  .stat-value { color: var(--cisco-yellow-dark); }
+    .stat[data-tone='danger']   { border-left-color: var(--cisco-red); }
+    .stat[data-tone='danger']   .stat-value { color: var(--cisco-red-dark); }
+    .stat[data-tone='info']     { border-left-color: var(--cisco-blue); }
+    .stat[data-tone='info']     .stat-value { color: var(--cisco-indigo); }
+    .stat[data-tone='health']   { border-left-color: var(--health-green); background: var(--health-green-light); }
+    .stat[data-tone='health']   .stat-value { color: var(--health-green); }
+
+    .card { background: var(--bg-elevated); border: 1px solid var(--stroke-soft);
+            border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-card); }
+    .card-header { padding: 10px 14px; font-size: 12px; font-weight: 700;
+                   text-transform: uppercase; letter-spacing: 0.05em;
+                   color: var(--cisco-indigo); background: var(--cisco-gray-50);
+                   border-bottom: 1px solid var(--stroke-faint); display: flex;
+                   align-items: center; justify-content: space-between; gap: 12px; }
+    .card-header.health { background: var(--health-green-light); color: var(--health-green);
+                          border-bottom-color: var(--health-green-border); }
+    .card-body { padding: 14px 16px; }
+
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px;
+            font-size: 11px; font-weight: 600; border-radius: 999px;
+            background: var(--cisco-gray-100); color: var(--cisco-gray-700);
+            border: 1px solid transparent; white-space: nowrap; letter-spacing: 0.02em; }
+    .pill.sm { padding: 1px 8px; font-size: 10px; }
+    .pill[data-tone='success'] { background: var(--cisco-green-bg);  color: var(--cisco-green-dark); }
+    .pill[data-tone='warning'] { background: var(--cisco-yellow-bg); color: var(--cisco-yellow-dark); }
+    .pill[data-tone='danger']  { background: var(--cisco-red-bg);    color: var(--cisco-red-dark); }
+    .pill[data-tone='info']    { background: var(--cisco-info-bg);   color: var(--cisco-indigo); }
+    .pill[data-tone='health']  { background: var(--health-green-light); color: var(--health-green);
+                                  border-color: var(--health-green-border); }
+
+    .callout { border: 1px solid var(--stroke-soft); border-left-width: 4px;
+               border-radius: var(--radius-md); padding: 14px 16px; background: var(--bg-surface);
+               display: flex; flex-direction: column; gap: 6px; }
+    .callout-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; }
+    .callout-body { color: var(--text-secondary); }
+    .callout[data-tone='info']    { border-left-color: var(--cisco-blue);   background: var(--cisco-info-bg); }
+    .callout[data-tone='info']    .callout-title { color: var(--cisco-indigo); }
+    .callout[data-tone='success'] { border-left-color: var(--cisco-green);  background: var(--cisco-green-bg); }
+    .callout[data-tone='success'] .callout-title { color: var(--cisco-green-dark); }
+    .callout[data-tone='warning'] { border-left-color: var(--cisco-yellow); background: var(--cisco-yellow-bg); }
+    .callout[data-tone='warning'] .callout-title { color: var(--cisco-yellow-dark); }
+    .callout[data-tone='danger']  { border-left-color: var(--cisco-red);    background: var(--cisco-red-bg); }
+    .callout[data-tone='danger']  .callout-title { color: var(--cisco-red-dark); }
+    .callout[data-tone='health']  { border-left-color: var(--health-green); background: var(--health-green-light);
+                                     border-color: var(--health-green-border); border-left-width: 4px; }
+    .callout[data-tone='health']  .callout-title { color: var(--health-green); }
+
+    .table-wrap { border: 1px solid var(--stroke-soft); border-radius: var(--radius-md);
+                  overflow: auto; background: var(--bg-surface); }
+    table.cisco-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cisco-table thead { background: var(--cisco-gray-50); }
+    .cisco-table th { font-weight: 700; font-size: 11px; text-transform: uppercase;
+                      letter-spacing: 0.06em; color: var(--cisco-indigo); padding: 10px 12px;
+                      text-align: left; border-bottom: 1px solid var(--stroke-soft);
+                      white-space: nowrap; }
+    .cisco-table th.health-col { color: var(--health-green); }
+    .cisco-table td { padding: 9px 12px; border-bottom: 1px solid var(--stroke-faint);
+                      vertical-align: top; }
+    .cisco-table tbody tr:last-child td { border-bottom: 0; }
+    .cisco-table.striped tbody tr:nth-child(even) { background: var(--cisco-gray-50); }
+    .cisco-table .num  { text-align: right; font-variant-numeric: tabular-nums; }
+    .cisco-table .right { text-align: right; }
+    .cisco-table .left  { text-align: left; }
+    .cisco-table tr[data-tone='success'] { background: var(--cisco-green-bg)  !important; }
+    .cisco-table tr[data-tone='warning'] { background: var(--cisco-yellow-bg) !important; }
+    .cisco-table tr[data-tone='danger']  { background: var(--cisco-red-bg)    !important; }
+    .cisco-table tr[data-tone='info']    { background: var(--cisco-info-bg)   !important; }
+    .cisco-table tr[data-tone='health']  { background: var(--health-green-light) !important; }
+
+    .chart-frame { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+                   border-radius: var(--radius-md); padding: 12px 14px; position: relative; }
+    .chart-frame.health { border-color: var(--health-green-border);
+                           background: var(--bg-surface); }
+    .chart-frame .chart-canvas-wrap { position: relative; width: 100%; }
+    .chart-caption { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+    .footnote { font-size: 11.5px; color: var(--text-tertiary); line-height: 1.5; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .kpi-band { background: linear-gradient(135deg, var(--cisco-indigo-900) 0%, var(--cisco-indigo) 100%);
+                color: var(--cisco-white); border-radius: var(--radius-md); padding: 18px 24px;
+                display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .kpi-band.health { background: linear-gradient(135deg, #0d4a2e 0%, var(--health-green) 100%); }
+    .kpi-band .kpi-headline { font-size: 15px; font-weight: 500;
+                              color: rgba(255,255,255,0.85); max-width: 60%; }
+    .kpi-band .kpi-headline strong { color: var(--cisco-white); font-weight: 700; }
+    .kpi-band .kpi-headline em { font-style: normal; color: var(--cisco-blue); font-weight: 700; }
+    .kpi-band.health .kpi-headline em { color: #a8e6c3; }
+
+    .region-block { background: var(--bg-surface); border: 1px solid var(--stroke-soft);
+                    border-radius: var(--radius-lg); padding: 20px 24px;
+                    box-shadow: var(--shadow-card); }
+    .region-block-title { font-size: 16px; font-weight: 700; color: var(--cisco-indigo);
+                          margin: 0 0 16px; display: flex; align-items: center; gap: 10px; }
+    .region-flag { display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+                   background: var(--cisco-blue); }
+
+    .health-highlight { background: var(--health-green-light);
+                        border: 1px solid var(--health-green-border);
+                        border-radius: var(--radius-md); padding: 8px 12px;
+                        font-size: 12px; color: var(--health-green); font-weight: 600; }
+
+    @media print {
+      .cisco-brandbar { background: var(--cisco-white); color: var(--cisco-black); }
+      .cisco-logo { color: var(--cisco-black); }
+      .tabs, .page-meta { display: none; }
+      .page-shell { padding: 0; }
+      .card, .stat, .callout, .chart-frame, .table-wrap { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cisco-brandbar" role="banner">
+    <div class="cisco-brandbar-inner">
+      <span class="cisco-logo" aria-label="Cisco">
+        <span class="cisco-logo-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+        cisco
+      </span>
+      <span class="cisco-brand-divider" aria-hidden="true"></span>
+      <span class="cisco-brand-title">Global Benefits Dashboard &mdash; Employee Health Span</span>
+      <span class="cisco-brand-spacer"></span>
+      <span class="cisco-brand-meta">
+        <span class="pill" data-tone="health" style="background:rgba(26,124,74,0.25);color:#a8e6c3;border-color:rgba(168,230,195,0.3);">Health Span View</span>
+        <span>YTD 2025 / Q1 FY26</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <h1 class="page-title">Employee Health Span Dashboard</h1>
+      <p class="page-subtitle">
+        A lens on how employees are doing &mdash; EAP utilization, mental health programs, wellbeing satisfaction,
+        burnout risk signals, preventive care, and plan design coverage. Data from YTD 2025 &ndash; Q1 FY26.
+        <strong style="color: var(--health-green);">Green highlights</strong> = health-span specific data points.
+      </p>
+      <div class="page-meta">
+        <span>HC snapshot: May 2026 &middot; 85,639 employees &middot; 91 countries</span>
+        <span>EAP source: Optum YTD 2025 + Pulse Feb 2026</span>
+        <span>Wellthy: trailing 12mo Mar 2026</span>
+        <span>RethinkCare: Feb 2026</span>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Dashboard tabs">
+      <a class="tab" href="index.html">Overview</a>
+      <a class="tab" href="financials.html">Financials</a>
+      <a class="tab" href="adoption.html">Adoption</a>
+      <a class="tab" href="experience.html">Experience</a>
+      <a class="tab health-tab is-active" href="employee_health.html" aria-current="page">&#10084; Health Span</a>
+      <a class="tab health-tab" href="health_analysis.html">Health Analysis</a>
+      <a class="tab" href="dictionary.html">Dictionary</a>
+    </nav>
+
+    <section class="stack gap-24">
+
+      <!-- ================================================================
+           GLOBAL VIEW
+           ================================================================ -->
+      <div class="health-section-label">Global &mdash; All Regions Combined</div>
+
+      <!-- Health span story band -->
+      <div class="kpi-band health" role="region" aria-label="Health span headline">
+        <div class="kpi-headline">
+          Cisco employees who complete an EAP engagement self-report a
+          <strong>23% reduction in absent days</strong> and a
+          <strong>23% improvement in stress</strong>.
+          Global EAP utilization runs <em>3.94%</em> on Cisco HC &mdash;
+          <strong>58% above</strong> the Optum 2.5% book-of-business benchmark.
+          Wellthy engagement has grown from 6.1% to <em>6.9%</em> in 12 months.
+        </div>
+        <div class="row gap-16" style="margin-left:auto;">
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.7);">EAP Util</div>
+            <div style="font-size:24px; font-weight:700;">3.94%</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.6);">vs 2.5% BoB</div>
+          </div>
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.7);">CSAT</div>
+            <div style="font-size:24px; font-weight:700;">94.4%</div>
+          </div>
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.7);">Wellthy NPS</div>
+            <div style="font-size:24px; font-weight:700;">81</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.6);">was 93</div>
+          </div>
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.7);">RethinkCare</div>
+            <div style="font-size:24px; font-weight:700;">4.84%</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.6);">Cisco HC reach</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global health KPIs -->
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="health">
+          <div class="stat-value">3.94%</div>
+          <div class="stat-label">Global EAP utilization (Cisco HC)</div>
+        </div>
+        <div class="stat" data-tone="health">
+          <div class="stat-value">23.0%</div>
+          <div class="stat-label">Absenteeism reduction post-EAP</div>
+        </div>
+        <div class="stat" data-tone="health">
+          <div class="stat-value">23.0%</div>
+          <div class="stat-label">Stress improvement post-EAP</div>
+        </div>
+        <div class="stat" data-tone="health">
+          <div class="stat-value">22.9%</div>
+          <div class="stat-label">Presenteeism improvement post-EAP</div>
+        </div>
+      </div>
+
+      <div class="grid cols-4 gap-16">
+        <div class="stat" data-tone="success">
+          <div class="stat-value">94.4%</div>
+          <div class="stat-label">Optum EAP CSAT (n=142)</div>
+        </div>
+        <div class="stat" data-tone="success">
+          <div class="stat-value">95.1%</div>
+          <div class="stat-label">Timely access (Optum)</div>
+        </div>
+        <div class="stat" data-tone="success">
+          <div class="stat-value">22.6%</div>
+          <div class="stat-label">EAP vendor engagement % (vs 17.3% BoB)</div>
+        </div>
+        <div class="stat" data-tone="warning">
+          <div class="stat-value">2.9%</div>
+          <div class="stat-label">Q4 2025 quarterly util &mdash; 8-qtr low</div>
+        </div>
+      </div>
+
+      <!-- EAP utilization by region chart -->
+      <h2 class="h2">EAP utilization by region vs benchmark (Optum, YTD 2025)</h2>
+      <p class="text-small text-secondary">
+        Cisco-recomputed utilization uses May 2026 Cisco HC as the denominator. The Optum
+        book-of-business benchmark is 2.5% globally. EMEA leads at 6.42%, driven heavily
+        by Portugal onsite-clinic-linked utilization (&gt;90% of EMEA cases). Canada is
+        the <strong>only region below benchmark</strong> at 1.63%.
+      </p>
+      <div class="chart-frame health">
+        <div class="chart-canvas-wrap" style="height:300px;">
+          <canvas id="chart-eap-region"></canvas>
+        </div>
+      </div>
+
+      <!-- Regional EAP detail cards -->
+      <div class="grid cols-5 gap-16">
+        <div class="card">
+          <div class="card-header health">Global (non-US) <span class="pill sm" data-tone="health">+1.3pp vs BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">1,800</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">3.94%</span>
+            <span class="text-small text-tertiary">Cisco HC</span><span>45,676</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="color: var(--cisco-yellow-dark);">Canada <span class="pill sm" data-tone="warning">Below BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">41</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">1.63%</span>
+            <span class="text-small text-tertiary">Cisco HC</span><span>2,512</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">APJC <span class="pill sm" data-tone="warning">Slightly below</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">543</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">2.30%</span>
+            <span class="text-small text-tertiary">Cisco HC</span><span>23,595</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header health">EMEA <span class="pill sm" data-tone="health">+3.6pp vs BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">1,011</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">6.42%</span>
+            <span class="text-small text-tertiary">Cisco HC</span><span>15,738</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header health">LATAM <span class="pill sm" data-tone="health">+2.8pp vs BoB</span></div>
+          <div class="card-body stack gap-6">
+            <span class="text-small text-tertiary">Cases YTD 2025</span><span class="text-semibold">205</span>
+            <span class="text-small text-tertiary">Cisco-HC util</span><span class="text-semibold">5.35%</span>
+            <span class="text-small text-tertiary">Cisco HC</span><span>3,831</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trend alert -->
+      <div class="callout" data-tone="warning">
+        <h3 class="callout-title">&#9888; Health Span Trend Alert &mdash; Declining Help-Seeking Behavior Q4 2025</h3>
+        <div class="callout-body">
+          Quarterly annualized EAP utilization has trended <strong>down</strong> through 2025:
+          Q1 4.6% &rarr; Q4 2.9% &mdash; the lowest of 8 trailing quarters.
+          Q1 2026 Pulse data (Jan 4.7%, Feb 4.5%) shows a recovery, but the Q4 2025 dip
+          warrants investigation to distinguish seasonality from a real change in help-seeking behavior
+          or stigma. This is a leading health span indicator.
+        </div>
+      </div>
+
+      <!-- Quarterly trend chart -->
+      <h2 class="h2">EAP quarterly utilization trend (global, annualized)</h2>
+      <div class="chart-frame health">
+        <div class="chart-canvas-wrap" style="height:240px;">
+          <canvas id="chart-eap-trend"></canvas>
+        </div>
+      </div>
+
+      <!-- Monthly pulse -->
+      <h2 class="h2">Optum Pulse monthly utilization (Feb 2025 &rarr; Feb 2026)</h2>
+      <div class="chart-frame">
+        <div class="chart-canvas-wrap" style="height:260px;">
+          <canvas id="chart-pulse-monthly"></canvas>
+        </div>
+      </div>
+
+      <!-- Mental health top presenting issues -->
+      <h2 class="h2">Mental health &amp; stress signals &mdash; top presenting issues by region</h2>
+      <p class="text-small text-secondary">
+        <strong>Anxiety/Worry dominates globally</strong> and is the top or second issue in every region.
+        Taxation appearing as #1 in EMEA and LATAM signals financial stress as a primary health driver
+        &mdash; a cross-program signal for financial wellness investment. APJC's top issue (couple/relationship)
+        may reflect cultural norms around EAP access, as relationship concerns are often the entry point
+        for broader mental health conversations.
+      </p>
+      <div class="table-wrap">
+        <table class="cisco-table striped">
+          <thead>
+            <tr>
+              <th>Region</th>
+              <th class="health-col">Top Health/Mental Issue #1</th>
+              <th>Top Issue #2</th>
+              <th>Top Issue #3</th>
+              <th>Key Signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-tone="health">
+              <td>Global (non-US)</td>
+              <td><strong>Anxious / Worry</strong></td>
+              <td>General EAP Benefit</td>
+              <td>Low Mood / Elevated Mood</td>
+              <td><span class="pill sm" data-tone="health">Anxiety dominant</span></td>
+            </tr>
+            <tr data-tone="health">
+              <td>Canada</td>
+              <td><strong>Anxious / Worry</strong></td>
+              <td>General EWS Benefit</td>
+              <td>Parenting</td>
+              <td><span class="pill sm" data-tone="health">Anxiety + Caregiving</span></td>
+            </tr>
+            <tr>
+              <td>APJC</td>
+              <td>Couple / Primary relationship</td>
+              <td><strong>Anxious / Worry</strong></td>
+              <td>Other &mdash; Health Related</td>
+              <td><span class="pill sm" data-tone="info">Relationship as entry point</span></td>
+            </tr>
+            <tr>
+              <td>EMEA</td>
+              <td><strong>Taxation</strong></td>
+              <td>Anxious / Worry</td>
+              <td>Couple / Primary relationship</td>
+              <td><span class="pill sm" data-tone="warning">Financial stress #1</span></td>
+            </tr>
+            <tr>
+              <td>LATAM</td>
+              <td><strong>Taxation</strong></td>
+              <td>Family: Dispute</td>
+              <td>Real Estate</td>
+              <td><span class="pill sm" data-tone="warning">Financial stress #1</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EAP outcomes -->
+      <h2 class="h2">EAP health outcomes (Optum YTD 2025)</h2>
+      <div class="grid cols-3 gap-16">
+        <div class="card">
+          <div class="card-header health">Satisfaction &amp; Access</div>
+          <div class="card-body stack gap-8">
+            <div class="row"><span>Overall CSAT</span><span class="spacer"></span><span class="text-semibold">94.4%</span></div>
+            <div class="row"><span>Timely &amp; prompt access</span><span class="spacer"></span><span class="text-semibold">95.1%</span></div>
+            <div class="row"><span>Able to manage issue</span><span class="spacer"></span><span class="text-semibold">87.6%</span></div>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">n=142 client surveys, Jan-Dec 2025</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header health">Productivity &amp; Health Outcomes</div>
+          <div class="card-body stack gap-8">
+            <div class="row"><span>Stress improvement</span><span class="spacer"></span><span class="text-semibold" style="color:var(--health-green);">23.0%</span></div>
+            <div class="row"><span>Absenteeism reduction</span><span class="spacer"></span><span class="text-semibold" style="color:var(--health-green);">23.0%</span></div>
+            <div class="row"><span>Presenteeism improvement</span><span class="spacer"></span><span class="text-semibold" style="color:var(--health-green);">22.9%</span></div>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">Avg 1.8 fewer absent days &middot; 2.3 more present days post-EAP</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Beyond counselling &mdash; Broader engagement</div>
+          <div class="card-body stack gap-8">
+            <div class="row"><span>LiveWell web sessions</span><span class="spacer"></span><span class="text-semibold">6,547</span></div>
+            <div class="row"><span>Training attendees</span><span class="spacer"></span><span class="text-semibold">1,815</span></div>
+            <div class="row"><span>Engagement %</span><span class="spacer"></span><span class="text-semibold">22.6%</span></div>
+            <hr class="divider" />
+            <span class="text-small text-tertiary">BoB benchmark engagement: 17.3%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wellbeing programs -->
+      <div class="health-section-label">Global Mental Wellbeing Programs</div>
+
+      <h2 class="h2">Wellthy caregiving support &mdash; global engagement growth</h2>
+      <div class="grid cols-2 gap-16">
+        <div class="card">
+          <div class="card-header">Annual 2025 (Jan-Dec)</div>
+          <div class="card-body stack gap-12">
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Engaged lives</div><div class="text-semibold">3,170</div></div>
+              <div><div class="text-small text-tertiary">Engagement %</div><div class="text-semibold">6.1%</div></div>
+              <div><div class="text-small text-tertiary">NPS (Q4 2025)</div><div class="text-semibold" style="color:var(--cisco-green-dark);">93</div></div>
+            </div>
+            <hr class="divider" />
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Active care projects</div><div class="text-semibold">611</div></div>
+              <div><div class="text-small text-tertiary">Hours saved (US)</div><div class="text-semibold">18,162</div></div>
+            </div>
+            <hr class="divider" />
+            <div class="health-highlight">Q4 survey (n=29): 93% less stressed &middot; 100% more present &middot; NPS 93</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header health">Trailing 12 months (Apr 2025 &ndash; Mar 2026)</div>
+          <div class="card-body stack gap-12">
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Engaged lives</div><div class="text-semibold">4,209</div></div>
+              <div><div class="text-small text-tertiary">Engagement %</div><div class="text-semibold" style="color:var(--health-green);">6.9%</div></div>
+              <div><div class="text-small text-tertiary">NPS (Q1 2026)</div><div class="text-semibold" style="color:var(--cisco-yellow-dark);">81</div></div>
+            </div>
+            <hr class="divider" />
+            <div class="row gap-16">
+              <div><div class="text-small text-tertiary">Active care projects</div><div class="text-semibold">816</div></div>
+              <div><div class="text-small text-tertiary">Hours saved (US)</div><div class="text-semibold">20,248</div></div>
+            </div>
+            <hr class="divider" />
+            <div class="callout" data-tone="warning" style="padding:8px 12px;">
+              <h3 class="callout-title" style="font-size:12px;">Q1 NPS note</h3>
+              <div class="callout-body" style="font-size:12px;">NPS 81 (Q1 2026, n=53 vs 29 prior). "More present at work" 33% (was 100%) &mdash; small n caveat applies. Discuss with Wellthy.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wellthy survey outcomes -->
+      <div class="table-wrap">
+        <table class="cisco-table">
+          <thead>
+            <tr>
+              <th class="health-col">Wellthy Health Outcome</th>
+              <th class="right">Q4 2025 (n=29)</th>
+              <th class="right">Q1 2026 (n=53)</th>
+              <th>Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-tone="health"><td><strong>Less stressed with Wellthy support</strong></td><td class="num">93%</td><td class="num">83%</td><td><span class="pill sm" data-tone="warning">&minus;10pp — monitor</span></td></tr>
+            <tr data-tone="warning"><td><strong>More present at work</strong></td><td class="num">100%</td><td class="num">33%</td><td><span class="pill sm" data-tone="danger">&minus;67pp (small n)</span></td></tr>
+            <tr data-tone="warning"><td><strong>Avoided missing work</strong></td><td class="num">78%</td><td class="num">38%</td><td><span class="pill sm" data-tone="warning">&minus;40pp (small n)</span></td></tr>
+            <tr><td>NPS</td><td class="num">93</td><td class="num">81</td><td><span class="pill sm" data-tone="warning">Still elite tier</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RethinkCare mental health -->
+      <h2 class="h2">RethinkCare &mdash; mental health &amp; resilience enrollment (Feb 2026)</h2>
+      <div class="grid cols-5 gap-16">
+        <div class="stat" data-tone="health">
+          <div class="stat-value">2,207</div>
+          <div class="stat-label">US &mdash; 5.52% of 39,963 EE</div>
+        </div>
+        <div class="stat" data-tone="health">
+          <div class="stat-value">196</div>
+          <div class="stat-label">Canada &mdash; 7.80% of 2,512 EE (leads)</div>
+        </div>
+        <div class="stat" data-tone="info">
+          <div class="stat-value">1,009</div>
+          <div class="stat-label">APJC &mdash; 4.28% of 23,595 EE</div>
+        </div>
+        <div class="stat" data-tone="info">
+          <div class="stat-value">676</div>
+          <div class="stat-label">EMEA &mdash; 4.30% of 15,738 EE</div>
+        </div>
+        <div class="stat" data-tone="info">
+          <div class="stat-value">215</div>
+          <div class="stat-label">LATAM &mdash; 5.61% of 3,831 EE</div>
+        </div>
+      </div>
+      <div class="chart-frame health">
+        <div class="text-small text-secondary" style="margin-bottom:6px;">
+          RethinkCare cumulative global enrollment growth
+        </div>
+        <div class="chart-canvas-wrap" style="height:240px;">
+          <canvas id="chart-rethink"></canvas>
+        </div>
+      </div>
+
+      <!-- Financial investment in employee health -->
+      <h2 class="h2">Investment in employee health by region (FY26 plan)</h2>
+      <p class="text-small text-secondary">
+        Wellbeing &amp; Mental Health and Work/Life categories across all regions.
+        US dominates absolute dollars but represents a smaller share of per-EE spend vs non-US.
+      </p>
+      <div class="grid cols-2 gap-16">
+        <div class="chart-frame health">
+          <div class="text-small text-secondary" style="margin-bottom:6px;">
+            Wellbeing &amp; Mental Health spend (USD millions)
+          </div>
+          <div class="chart-canvas-wrap" style="height:240px;">
+            <canvas id="chart-wb-spend"></canvas>
+          </div>
+        </div>
+        <div class="chart-frame health">
+          <div class="text-small text-secondary" style="margin-bottom:6px;">
+            Work/Life (Childcare, Caregiving, EAP, Family) spend (USD millions)
+          </div>
+          <div class="chart-canvas-wrap" style="height:240px;">
+            <canvas id="chart-wl-spend"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="grid cols-3 gap-16">
+        <div class="stat" data-tone="health">
+          <div class="stat-value">$19.6M</div>
+          <div class="stat-label">Total Wellbeing &amp; Mental Health spend (global, FY26 plan)</div>
+        </div>
+        <div class="stat" data-tone="health">
+          <div class="stat-value">$18.4M</div>
+          <div class="stat-label">Total Work/Life support spend (global, FY26 plan)</div>
+        </div>
+        <div class="stat" data-tone="info">
+          <div class="stat-value">&lt;2.5%</div>
+          <div class="stat-label">Wellbeing &amp; MH as % of total health-related spend (~$875M)</div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- ================================================================
+           REGIONAL VIEWS
+           ================================================================ -->
+      <div class="region-section-label">Regional Deep-Dives &mdash; Employee Health Span by Geography</div>
+
+      <!-- US + Canada -->
+      <div class="region-block">
+        <div class="region-block-title">
+          <span class="region-flag" style="background: var(--cisco-indigo);"></span>
+          Americas &mdash; United States &amp; Canada
+        </div>
+        <div class="grid cols-4 gap-16">
+          <div class="stat" data-tone="info">
+            <div class="stat-value">39,963</div>
+            <div class="stat-label">US headcount (46.7% of global HC)</div>
+          </div>
+          <div class="stat" data-tone="health">
+            <div class="stat-value">5.52%</div>
+            <div class="stat-label">RethinkCare penetration &mdash; US</div>
+          </div>
+          <div class="stat" data-tone="warning">
+            <div class="stat-value">1.63%</div>
+            <div class="stat-label">Canada EAP util &mdash; only region below BoB (2.5%)</div>
+          </div>
+          <div class="stat" data-tone="health">
+            <div class="stat-value">7.80%</div>
+            <div class="stat-label">Canada RethinkCare penetration &mdash; highest region</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;" class="grid cols-2 gap-16">
+          <div class="callout" data-tone="health">
+            <h3 class="callout-title">US health program highlights</h3>
+            <div class="callout-body">
+              US carries $49,565 cost/EE in benefits. Wellbeing &amp; MH spend: $13.0M.
+              Work/Life spend: $8.9M. Onsite Health &amp; Clinic: $16.9M (only region with this category).
+              RethinkCare: 2,207 enrolled (+192 since Aug launch). Wellthy: 18,162 hours saved.
+              Optum EAP utilization primarily benchmarked vs global non-US average (US has separate program).
+            </div>
+          </div>
+          <div class="callout" data-tone="warning">
+            <h3 class="callout-title">Canada gap &mdash; EAP below benchmark</h3>
+            <div class="callout-body">
+              Canada EAP utilization is 1.63% (Cisco HC basis) vs 2.5% BoB benchmark &mdash; a
+              <strong>0.87pp underperformance</strong> on only 41 cases. Top issues: Anxious/Worry,
+              Parenting. RethinkCare penetration is the strongest at 7.80%, suggesting program
+              reach is there but EAP conversion is low. Investigate awareness, access, or stigma.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMEA -->
+      <div class="region-block">
+        <div class="region-block-title">
+          <span class="region-flag" style="background: var(--cisco-green);"></span>
+          EMEA &mdash; Europe, Middle East &amp; Africa
+        </div>
+        <div class="grid cols-4 gap-16">
+          <div class="stat" data-tone="health">
+            <div class="stat-value">6.42%</div>
+            <div class="stat-label">EAP utilization &mdash; +3.6pp above BoB (2.5%)</div>
+          </div>
+          <div class="stat" data-tone="info">
+            <div class="stat-value">1,011</div>
+            <div class="stat-label">EAP cases YTD 2025 (of 1,800 global)</div>
+          </div>
+          <div class="stat" data-tone="info">
+            <div class="stat-value">676</div>
+            <div class="stat-label">RethinkCare enrolled (4.30%)</div>
+          </div>
+          <div class="stat" data-tone="warning">
+            <div class="stat-value">Taxation</div>
+            <div class="stat-label">Top presenting issue &mdash; financial stress signal</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;" class="grid cols-2 gap-16">
+          <div class="callout" data-tone="success">
+            <h3 class="callout-title">EMEA EAP standout: Portugal</h3>
+            <div class="callout-body">
+              Portugal YTD util 38.2% vs 4.2% BoB &mdash; representing <strong>&gt;90% of all
+              EMEA cases</strong>. This is likely an onsite-clinic attribution effect rather than
+              pure organic demand. Removing Portugal would likely put EMEA utilization at or below
+              benchmark. This distinction matters for program design decisions.
+            </div>
+          </div>
+          <div class="callout" data-tone="info">
+            <h3 class="callout-title">EMEA plan design &mdash; mental health coverage</h3>
+            <div class="callout-body">
+              EMEA insurance program managed via MMB (23 policies, $68.9M premium).
+              $310.6K in cost savings/avoidance YTD. Q1 FY26 benefit case ops: 1,300 cases
+              (-32% QoQ). Car Program Support cases have highest escalation rate (33%) and
+              longest avg age (10.6 days) &mdash; not a direct health issue but operational
+              burden may affect employee experience.
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;" class="callout" data-tone="warning">
+          <h3 class="callout-title">EMEA wellbeing score: Romania (2/10) &amp; Saudi Arabia Darwin (3/10)</h3>
+          <div class="callout-body">
+            MMB SLA survey: Romania scored 2/10 (active remediation plan). Saudi Arabia Darwin portal 3/10
+            (down from 7.6 annual avg). These low service quality scores may indirectly impact employee
+            health outcomes if employees cannot efficiently access benefits.
+          </div>
+        </div>
+      </div>
+
+      <!-- APJC -->
+      <div class="region-block">
+        <div class="region-block-title">
+          <span class="region-flag" style="background: var(--cisco-yellow);"></span>
+          APJC &mdash; Asia-Pacific, Japan &amp; China
+        </div>
+        <div class="grid cols-4 gap-16">
+          <div class="stat" data-tone="info">
+            <div class="stat-value">2.30%</div>
+            <div class="stat-label">EAP utilization (Cisco HC, slightly below 2.5% BoB)</div>
+          </div>
+          <div class="stat" data-tone="health">
+            <div class="stat-value">7.6&ndash;9.5</div>
+            <div class="stat-label">Wellbeing satisfaction range (1-10) across sub-regions</div>
+          </div>
+          <div class="stat" data-tone="warning">
+            <div class="stat-value">28%</div>
+            <div class="stat-label">Japan vacation utilization &mdash; burnout risk signal</div>
+          </div>
+          <div class="stat" data-tone="danger">
+            <div class="stat-value">0 / 1</div>
+            <div class="stat-label">Korea &mdash; only country with NO mental health insurance coverage</div>
+          </div>
+        </div>
+
+        <!-- APJC wellbeing satisfaction chart -->
+        <div style="margin-top:16px;">
+          <h3 class="h3" style="margin-bottom:12px;">APJC wellbeing satisfaction by sub-region (FY25, 1-10 scale)</h3>
+          <div class="chart-frame health">
+            <div class="chart-canvas-wrap" style="height:200px;">
+              <canvas id="chart-apjc-wb"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- APJC burnout risk -->
+        <div style="margin-top:16px;">
+          <h3 class="h3" style="margin-bottom:8px;">Burnout risk signals &mdash; APJC vacation utilization (FY25)</h3>
+          <p class="text-small text-secondary" style="margin-bottom:12px;">
+            Vacation utilization = leave taken / entitlement. Low utilization flags potential burnout
+            and always-on culture. Japan (28%), Taiwan (30%), and Korea (36%) are concerning.
+            India's elevated sick leave (71%) may reflect a different dynamic.
+          </p>
+          <div class="chart-frame" style="border-color:var(--cisco-yellow-dark);">
+            <div class="chart-canvas-wrap" style="height:380px;">
+              <canvas id="chart-burnout"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;" class="grid cols-2 gap-16">
+          <div class="callout" data-tone="danger">
+            <h3 class="callout-title">Korea &mdash; mental health coverage gap</h3>
+            <div class="callout-body">
+              Korea is the <strong>only country across all 14 APJC markets</strong> where mental
+              health is explicitly excluded from insurance coverage. Korea EAP utilization not
+              separately reported, but this plan design gap creates a structural barrier to mental
+              health support for 297 employees. Wellbeing satisfaction is N/A (not collected).
+              This should be a priority remediation item.
+            </div>
+          </div>
+          <div class="callout" data-tone="warning">
+            <h3 class="callout-title">Japan &amp; Taiwan &mdash; vacation under-utilization</h3>
+            <div class="callout-body">
+              Japan: 28% vacation utilization with no sick leave data available in source.
+              Japan wellbeing satisfaction 9.5/10 is paradoxically strong &mdash; may reflect
+              cultural reporting norms rather than true wellbeing. Taiwan: 30% vacation.
+              Korea: 36% vacation. These three markets warrant a targeted culture conversation
+              and policy review to reduce burnout risk.
+            </div>
+          </div>
+        </div>
+
+        <!-- APJC plan design mental health -->
+        <div style="margin-top:16px;">
+          <h3 class="h3" style="margin-bottom:8px;">APJC plan design &mdash; mental health &amp; pre-existing coverage</h3>
+          <div class="table-wrap">
+            <table class="cisco-table striped">
+              <thead>
+                <tr>
+                  <th>Country</th>
+                  <th>Sub-region</th>
+                  <th class="health-col">Mental Health Coverage</th>
+                  <th>Pre-existing</th>
+                  <th>Medical Ins</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-tone="health"><td>Australia</td><td>ANZ</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="info">Partial</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr><td>New Zealand</td><td>ANZ</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="warning">No</span></td><td><span class="pill sm" data-tone="info">Align</span></td></tr>
+                <tr data-tone="health"><td>China</td><td>GC</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="info">Partial</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr data-tone="health"><td>Hong Kong</td><td>GC</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="info">Partial</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr><td>Taiwan</td><td>GC</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="warning">No</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr><td>India</td><td>India</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="warning">No</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr data-tone="warning"><td>Japan</td><td>Japan</td><td><span class="pill sm" data-tone="info">Partial</span></td><td><span class="pill sm" data-tone="warning">No</span></td><td><span class="pill sm" data-tone="info">Align</span></td></tr>
+                <tr data-tone="danger"><td><strong>Korea, Republic of</strong></td><td>Korea</td><td><span class="pill sm" data-tone="danger">NO COVERAGE</span></td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr><td>Singapore</td><td>ASEAN</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="warning">No</span></td><td><span class="pill sm" data-tone="info">Align</span></td></tr>
+                <tr><td>Malaysia</td><td>ASEAN</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="info">Partial</span></td><td><span class="pill sm" data-tone="info">Align</span></td></tr>
+                <tr data-tone="health"><td>Indonesia</td><td>ASEAN</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="info">Partial</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr data-tone="health"><td>Vietnam</td><td>ASEAN</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="info">Partial</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr data-tone="health"><td>Thailand</td><td>ASEAN</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="info">Partial</span></td><td><span class="pill sm" data-tone="success">Above mkt</span></td></tr>
+                <tr><td>Philippines</td><td>ASEAN</td><td><span class="pill sm" data-tone="success">Yes</span></td><td><span class="pill sm" data-tone="warning">No</span></td><td><span class="pill sm" data-tone="info">Align</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- APJC preventive care -->
+        <div style="margin-top:16px;">
+          <h3 class="h3" style="margin-bottom:8px;">APJC preventive care participation (FY25)</h3>
+          <div class="chart-frame health">
+            <div class="chart-canvas-wrap" style="height:480px;">
+              <canvas id="chart-prev-care"></canvas>
+            </div>
+          </div>
+          <p class="footnote" style="margin-top:8px;">
+            7 of 14 APJC countries have &ge;50% health checkup participation. India: 74% insurance
+            claim ratio (claimants / HC). Singapore is the only Below benchmark grade for vaccination.
+          </p>
+        </div>
+      </div>
+
+      <!-- LATAM -->
+      <div class="region-block">
+        <div class="region-block-title">
+          <span class="region-flag" style="background: var(--cisco-red);"></span>
+          LATAM &mdash; Latin America
+        </div>
+        <div class="grid cols-4 gap-16">
+          <div class="stat" data-tone="health">
+            <div class="stat-value">5.35%</div>
+            <div class="stat-label">EAP utilization &mdash; +2.8pp above benchmark</div>
+          </div>
+          <div class="stat" data-tone="info">
+            <div class="stat-value">205</div>
+            <div class="stat-label">EAP cases YTD 2025</div>
+          </div>
+          <div class="stat" data-tone="info">
+            <div class="stat-value">215</div>
+            <div class="stat-label">RethinkCare enrolled (5.61%)</div>
+          </div>
+          <div class="stat" data-tone="warning">
+            <div class="stat-value">Taxation</div>
+            <div class="stat-label">Top presenting issue &mdash; financial anxiety signal</div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;" class="grid cols-2 gap-16">
+          <div class="callout" data-tone="success">
+            <h3 class="callout-title">Mexico Onsite Clinic &mdash; March 2026</h3>
+            <div class="callout-body">
+              Cisco MX Insurgentes &amp; Portal San Angel: <strong>33 visits, 0 escalations</strong>.
+              Top diagnoses: Health check-up (9), Other Gastro Disorder (8), Pharyngitis (5),
+              Cardiovascular (3). Health-promotion campaigns: Vaccination education (89 attendees),
+              Maternal &amp; child health (79 beneficiaries). 21-40 age cohort is the primary user group.
+              Recommend: keep hand-sanitizer dispensers stocked at cafeterias (top consult: gastro).
+            </div>
+          </div>
+          <div class="callout" data-tone="info">
+            <h3 class="callout-title">LATAM financial stress as health signal</h3>
+            <div class="callout-body">
+              Taxation (financial stress) is the #1 EAP presenting issue in LATAM, with Family: Dispute
+              and Real Estate also in top 3. This pattern &mdash; shared with EMEA &mdash; suggests
+              financial wellness support (BrightPlan, Wellthy financial coaching) would be particularly
+              high-value for LATAM employees. EAP utilization at 5.35% is strong for a smaller population.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary of health gaps -->
+      <div class="health-section-label">Health Span Gaps &amp; Priority Watch Items</div>
+
+      <div class="grid cols-2 gap-16">
+        <div class="callout" data-tone="danger">
+          <h3 class="callout-title">P1 Gap &mdash; Korea: No Mental Health Insurance Coverage</h3>
+          <div class="callout-body">
+            297 employees (Korea) have zero mental health insurance coverage. This is the only
+            such gap in the entire APJC portfolio. Action: Engage Korea benefits team and local
+            insurer to add mental health as covered benefit by FY27 plan renewal.
+          </div>
+        </div>
+        <div class="callout" data-tone="warning">
+          <h3 class="callout-title">P2 Risk &mdash; Japan/Taiwan/Korea Vacation Under-Utilization</h3>
+          <div class="callout-body">
+            28%, 30%, 36% vacation utilization in Japan, Taiwan, Korea respectively. Cultural
+            norms contribute but this creates structural burnout risk. Action: Partner with
+            HR teams in these markets on culture/manager enablement programs. Cross-reference
+            with employee engagement survey data.
+          </div>
+        </div>
+        <div class="callout" data-tone="warning">
+          <h3 class="callout-title">P3 Signal &mdash; Wellthy NPS &amp; Outcomes Decline Q1 2026</h3>
+          <div class="callout-body">
+            NPS dropped 93 &rarr; 81 and "more present at work" fell from 100% to 33%. Small sample
+            size means this may not be statistically meaningful, but requires a QBR conversation
+            with Wellthy to rule out systemic issues. Action: Request Q2 2026 survey data immediately.
+          </div>
+        </div>
+        <div class="callout" data-tone="warning">
+          <h3 class="callout-title">P4 Risk &mdash; Canada EAP Under-Utilization</h3>
+          <div class="callout-body">
+            Canada is the only region below BoB benchmark at 1.63% vs 2.5%. Given strong
+            RethinkCare penetration (7.80%), awareness isn't the issue. Investigate counseling
+            access routes, stigma, or Canada-specific EAP program design. Action: Deep-dive with
+            Optum Canada team on access barriers.
+          </div>
+        </div>
+      </div>
+
+      <p class="footnote">
+        Sources: Optum QBR Q4 2025 / Pulse Feb 2026; Wellthy 2025 Annual + Mar 2026 snapshot;
+        RethinkCare Dashboard Feb 2026; APJC Measurement &amp; Metrics data collection (Well-being,
+        Time-off, Insurance xlsx); Mexico Onsite Clinic March 2026; MMB Q2 FY26 SLA Survey.
+        Cisco HC denominator: May 2026 snapshot (85,639 EE). See
+        <a href="health_analysis.html">Health Analysis</a> for full interpretation and recommendations.
+      </p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
+  <script src="assets/charts.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // EAP by region
+      var REGIONS = ['Global (non-US)', 'Canada', 'APJC', 'EMEA', 'LATAM'];
+      CiscoChart.bar('chart-eap-region', REGIONS, [
+        { name: 'Cisco-HC utilization', data: [3.94, 1.63, 2.30, 6.42, 5.35], tone: 'primary' },
+        { name: 'Optum BoB benchmark',  data: [2.50, 2.50, 2.50, 2.50, 2.50], tone: 'warning' }
+      ], { valueFormat: 'percent', height: 300 });
+
+      // EAP quarterly trend
+      CiscoChart.bar('chart-eap-trend',
+        ['24 Q1','24 Q2','24 Q3','24 Q4','25 Q1','25 Q2','25 Q3','25 Q4'],
+        [{ name: 'Annualized utilization', data: [4.1, 5.6, 4.3, 3.9, 4.6, 4.5, 3.7, 2.9], tone: 'primary' }],
+        { valueFormat: 'percent', height: 240, legend: false }
+      );
+
+      // Monthly pulse
+      var PULSE = [
+        { m: 'Feb 25', u: 3.8, b: 2.0 }, { m: 'Mar 25', u: 3.7, b: 2.8 },
+        { m: 'Apr 25', u: 2.7, b: 2.8 }, { m: 'May 25', u: 3.7, b: 2.7 },
+        { m: 'Jun 25', u: 5.1, b: 2.7 }, { m: 'Jul 25', u: 4.2, b: 2.9 },
+        { m: 'Aug 25', u: 4.2, b: 2.7 }, { m: 'Sep 25', u: 3.6, b: 3.0 },
+        { m: 'Oct 25', u: 2.8, b: 3.0 }, { m: 'Nov 25', u: 4.3, b: 3.2 },
+        { m: 'Dec 25', u: 3.3, b: 3.1 }, { m: 'Jan 26', u: 4.7, b: 2.4 },
+        { m: 'Feb 26', u: 4.5, b: 3.1 }
+      ];
+      CiscoChart.bar('chart-pulse-monthly',
+        PULSE.map(function(p){return p.m;}),
+        [
+          { name: 'Cisco utilization', data: PULSE.map(function(p){return p.u;}), tone: 'primary' },
+          { name: 'BoB benchmark',     data: PULSE.map(function(p){return p.b;}), tone: 'warning' }
+        ],
+        { valueFormat: 'percent', height: 260 }
+      );
+
+      // RethinkCare
+      CiscoChart.bar('chart-rethink',
+        ['Aug 2025','Sep 2025','Oct 2025','Nov 2025','Dec 2025','Jan 2026','Feb 2026'],
+        [{ name: 'Cumulative enrolled', data: [3722, 3785, 3889, 3953, 3992, 4056, 4145], tone: 'primary' }],
+        { height: 240, legend: false }
+      );
+
+      // Wellbeing & MH spend
+      CiscoChart.bar('chart-wb-spend', ['US','Canada','EMEA','APJC','LATAM'], [{
+        name: 'USD millions',
+        data: [13.05, 0.32, 2.86, 3.09, 0.26],
+        tone: 'primary'
+      }], { valueFormat: 'usdM', height: 240, legend: false });
+
+      // Work/Life spend
+      CiscoChart.bar('chart-wl-spend', ['US','Canada','EMEA','APJC','LATAM'], [{
+        name: 'USD millions',
+        data: [8.85, 0.09, 7.00, 2.35, 0.14],
+        tone: 'success'
+      }], { valueFormat: 'usdM', height: 240, legend: false });
+
+      // APJC wellbeing satisfaction
+      CiscoChart.bar('chart-apjc-wb',
+        ['ANZ','Greater China','India','Japan','ASEAN'],
+        [{ name: 'Wellbeing satisfaction (1-10)', data: [9.4, 9.5, 8.9, 9.5, 7.6], tone: 'success' }],
+        { horizontal: true, height: 200, min: 0, max: 10, legend: false }
+      );
+
+      // Burnout / vacation utilization
+      var BURNOUT = [
+        ['Japan',       28,  null],
+        ['Taiwan',      30, 22.8],
+        ['Korea',       36, 24.1],
+        ['India',       48, 70.9],
+        ['New Zealand', 67, 43.9],
+        ['Australia',   73, 69.0],
+        ['Singapore',   65, 41.7],
+        ['Indonesia',   55,  0.0],
+        ['Malaysia',    71, 44.0],
+        ['Thailand',    65, 41.3],
+        ['Vietnam',     79, 28.4],
+        ['Philippines', 72, 52.2],
+        ['China',       71, 31.0],
+        ['Hong Kong',   79, 28.7]
+      ];
+      CiscoChart.bar('chart-burnout',
+        BURNOUT.map(function(b){return b[0];}),
+        [
+          { name: 'Vacation utilization %', data: BURNOUT.map(function(b){return b[1];}), tone: 'primary' },
+          { name: 'Sick leave utilization %', data: BURNOUT.map(function(b){return b[2];}), tone: 'warning' }
+        ],
+        { horizontal: true, valueFormat: 'percent', height: 380 }
+      );
+
+      // Preventive care
+      var PREV = [
+        ['Korea (statutory)',  100, 46.4],
+        ['Japan',               69, 72.7],
+        ['China',               77,  4.0],
+        ['Taiwan',              65,  0.0],
+        ['Hong Kong',           44, 16.0],
+        ['Thailand',            39, 48.3],
+        ['Vietnam',           47.3, 31.1],
+        ['Philippines',       47.8,  1.7],
+        ['India',             32.2,  1.5],
+        ['Malaysia',            44,  5.4],
+        ['Indonesia',         18.7,  6.5],
+        ['Singapore',         15.4, 14.5],
+        ['Australia',          6.2, 19.1],
+        ['New Zealand',          0, 12.3]
+      ];
+      CiscoChart.bar('chart-prev-care',
+        PREV.map(function(p){return p[0];}),
+        [
+          { name: 'Health checkup %', data: PREV.map(function(p){return p[1];}), tone: 'success' },
+          { name: 'Vaccination %',    data: PREV.map(function(p){return p[2];}), tone: 'info' }
+        ],
+        { horizontal: true, valueFormat: 'percent', height: 480 }
+      );
+    })();
+  </script>
+</body>
+</html>
